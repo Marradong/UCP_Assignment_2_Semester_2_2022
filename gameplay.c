@@ -85,6 +85,8 @@ void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* usrIns)
     case RIGHT_KEY:
         playerCoords[COLS] = playerCoords[COLS] + 1;
         break;
+    case UNDO_KEY:
+        break;
     default:
         break;
     }

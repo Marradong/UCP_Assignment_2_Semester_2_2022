@@ -18,7 +18,7 @@ int vArgs(int* numArgs)
 {
     int verified = TRUE;
     /* Check correct number of command line arguments has been entered */
-    if((*numArgs) != 7)
+    if((*numArgs) != NUM_ARGS)
     {
         verified = FALSE;
         /* Clear terminal and print error message */
@@ -90,7 +90,8 @@ int vMove(char* move)
 {
     int verified = FALSE;
     /*Check user enters a correct move key*/
-    if((*move) == UP_KEY || (*move) == DOWN_KEY || (*move) == LEFT_KEY || (*move) == RIGHT_KEY)
+    if((*move) == UP_KEY || (*move) == DOWN_KEY || (*move) == LEFT_KEY 
+        || (*move) == RIGHT_KEY || (*move) == UNDO_KEY)
     {
         verified = TRUE;
     }

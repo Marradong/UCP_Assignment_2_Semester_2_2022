@@ -6,6 +6,7 @@
 #define DOWN_KEY 's'
 #define LEFT_KEY 'a'
 #define RIGHT_KEY 'd'
+#define UNDO_KEY 'u'
 
 /* Definition for pointer to movement function */
 typedef void (*pfMove)(char***, char*, int*, int*);

@@ -4,6 +4,7 @@
 /* Boolean definitions */
 #define FALSE 0
 #define TRUE !FALSE
+#define NUM_ARGS 2
 
 int vStartLocation(int* usrIns);
 int vArgs(int* numArgs);
