@@ -13,13 +13,13 @@
  * @param usrIns the command line inputs of the user (int [6]).
  * @param canvas pointer to the game canvas (char***).
  */
-static void createCanvas(int* usrIns, char*** canvas)
+void createCanvas(int* canvasSize, char*** canvas)
 {
     int i;
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
-    int rows = usrIns[ROWS] + 2;
-    int cols = usrIns[COLS] + 2;
+    int rows = canvasSize[ROWS] + 2;
+    int cols = canvasSize[COLS] + 2;
     
     /* Dynamicly allocate memory the size of a char* to the rows of the array  */
     (*canvas) = (char**)malloc(rows * sizeof(char*));
@@ -28,26 +28,7 @@ static void createCanvas(int* usrIns, char*** canvas)
     for (i=0;i<rows;i++)
     {
         (*canvas)[i] = (char*)malloc(cols * sizeof(char));
-    }
-}
 
-/**
- * @brief Resets Canvas to a border and goal only.
- * 
- * @param usrIns the command line inputs of the user (int [6]).
- * @param canvas pointer to the game canvas (char***).
- */
-static void clearCanvas(int* usrIns, char*** canvas)
-{
-    int i;
-    /* Establish number of rows and columns in the array given by the users command line input */
-    /* + 2 accounts for the rows and columns that make up the canvas border */
-    int rows = usrIns[ROWS] + 2;
-    int cols = usrIns[COLS] + 2;
-    int goalCoords[2];
-
-    for (i=0;i<rows;i++)
-    {
         if(i == 0 || i == (rows - 1))
         {
             /* if it is the first or last row place a border symbol in every column */
@@ -61,26 +42,68 @@ static void clearCanvas(int* usrIns, char*** canvas)
             memset((*canvas)[i] + cols - 1, BORDER_SYM, 1);
         }
     }
-    /* Establish the position of the goal given by the users command line input */
-    goalCoords[0] = usrIns[GOAL_ROW];
-    goalCoords[1] = usrIns[GOAL_COL];
-    /* Place the goal character on the canvas at the given coordinates */
-    placeSym(goalCoords, canvas, GOAL_SYM);
 }
 
 /**
  * @brief Initialises and prints the canvas along with player and goal.
  * 
- * @param usrIns the command line inputs of the user (int [6]).
- * @param canvas pointer to the game canvas (char***).
+ * @param fInput, pointer to pointer of the file entered by the user in the command line (FILE**)
+ * @param canvas, pointer to the game canvas (char***).
+ * @param argv, pointer to array of characters entered by the user in the command line (char**)
+ * @param canvasSize, array of integers containing the size of the canvas (int[])
+ * @param goalCoords, array of integers containing the coordinates of the goal (int[])
+ * @param playerCoords, array of integers containing the coordinates of the player (int[])
  */
-void initCanvas(int* usrIns, int* playerCoords, char*** canvas)
+void initCanvas(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords)
 {
-    /* Create the canvas, place the player, border and the goal, and print it to the terminal */
-    createCanvas(usrIns, canvas);
-    clearCanvas(usrIns, canvas);   
-    placeSym(playerCoords, canvas, PLAYER_SYM);
-    printCanvas(usrIns, canvas);
+    (*fInput) = fopen(argv[FILE_IDX], "r");
+
+        if(fInput == NULL)
+        {
+            perror("File Opening Error: Please check file name is correct and the file exist");
+        }
+        else
+        {            
+            int coords[2]; 
+            int numRead = 3;
+            char cSymbol;
+
+            fscanf(fInput, "%d %d", coords[ROWS], coords[COLS]);
+            canvasSize[ROWS] = coords[ROWS];
+            canvasSize[COLS] = coords[COLS];
+
+            createCanvas(coords, canvas);
+
+            while (numRead != 3)
+            {
+                numRead = fscanf(fInput, "%d %d %c", coords[ROWS], coords[COLS], &cSymbol);
+
+                if(cSymbol == PLAYER_SYM)
+                {
+                    placeSym(coords, canvas, PLAYER_SYM);
+                    playerCoords[ROWS] = coords[ROWS];
+                    playerCoords[COLS] = coords[COLS];
+                }
+                else if(cSymbol == GOAL_SYM)
+                {
+                    placeSym(coords, canvas, GOAL_SYM);
+                    goalCoords[ROWS] = coords[ROWS];
+                    goalCoords[COLS] = coords[COLS];
+                }
+                else if(cSymbol == FLOOR_SYM)
+                {
+                    placeSym(coords, canvas, FLOOR_SYM);
+                }
+            }
+            printCanvas(canvasSize, canvas);
+
+            if(ferror(fInput))
+            {
+                perror("File Reading Error: ");
+            }
+
+            fclose(fInput);
+        }
 }
 
 /**
@@ -89,12 +112,12 @@ void initCanvas(int* usrIns, int* playerCoords, char*** canvas)
  * @param usrIns the command line inputs of the user (int [6]).
  * @param canvas pointer to the game canvas (char***).
  */
-void printCanvas(int* usrIns, char*** canvas)
+void printCanvas(int* canvasSize, char*** canvas)
 {
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
-    int rows = usrIns[ROWS] + 2;
-    int cols = usrIns[COLS] + 2;
+    int rows = canvasSize[ROWS] + 2;
+    int cols = canvasSize[COLS] + 2;
     int i, j;
 
     /* clears all previous output on the terminal */
@@ -114,6 +137,7 @@ void printCanvas(int* usrIns, char*** canvas)
     printf("Press s to go down\n");
     printf("Press a to go left\n");
     printf("Press d to go up\n");
+    printf("Press u to undo\n");
 }
 
 /**

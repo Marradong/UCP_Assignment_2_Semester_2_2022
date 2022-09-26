@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "toolbox.h"
+#include "canvas.h"
 
 /**************************************************************************************************/
 /* Utilities                           	      		                                         	  */

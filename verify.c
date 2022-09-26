@@ -24,7 +24,7 @@ int vArgs(int* numArgs)
         /* Clear terminal and print error message */
         system("clear");
         printf("Invalid number of arguements please enter in the format below\n");
-        printf("./escape <row_map> <col_map> <row_player> <col_player> <row_goal> <col_goal>\n");
+        printf("./escape <map_file_name>\n");
     }
     /* return true or false based on condition being checked */
     return verified;
@@ -35,46 +35,16 @@ int vArgs(int* numArgs)
  * 
  * @param usrIns, the command line inputs of the user (int [6]).
  */
-int vMapSize(int* usrIns)
+int vCanvasSize(int* canvasSize)
 {
     int verified = TRUE;
     /* Check if the user specified size of the canvas is greater than the defined minimum */
-    if((usrIns[ROWS] < MAP_SIZE_MINIMUM) || (usrIns[COLS] < MAP_SIZE_MINIMUM))
+    if((canvasSize[ROWS] < MAP_SIZE_MINIMUM) || (canvasSize[COLS] < MAP_SIZE_MINIMUM))
     {
         verified = FALSE;
         /* Clear terminal and print error message */
         system("clear");
         printf("Invalid Map Size! Please ensure map size is greater than or equal to 5\n");
-        printf("./escape <row_map> <col_map> <row_player> <col_player> <row_goal> <col_goal>\n");
-    }
-    /* return true or false based on condition being checked */
-    return verified;
-}
-
-/**
- * @brief Verifies the starting location of the player and goal specified by the user.
- * 
- * @param usrIns, the command line inputs of the user (int [6]).
- */
-int vStartLocation(int* usrIns)
-{
-    int verified = TRUE;
-
-    /* Check the user specified player location starts in map and not equal to the goal*/
-    int playerChecks = (usrIns[PLAYER_ROW] >= usrIns[ROWS]) || (usrIns[PLAYER_ROW] < 0) 
-        || (usrIns[PLAYER_COL] >= usrIns[COLS]) || (usrIns[PLAYER_COL] < 0 
-        || (usrIns[PLAYER_ROW] == usrIns[GOAL_ROW] && usrIns[PLAYER_COL] == usrIns[GOAL_COL]));
-
-    /* Check the user specified goal location starts in map and not equal to the player*/
-    int goalChecks = (usrIns[GOAL_ROW] >= usrIns[ROWS]) || (usrIns[GOAL_ROW] < 0) 
-        || (usrIns[GOAL_ROW] >= usrIns[COLS]) || (usrIns[GOAL_ROW] < 0);
-
-    if(playerChecks || goalChecks)
-    {
-        verified = FALSE;
-        /* Clear terminal and print error message */
-        system("clear");
-        printf("Invalid Location! Ensure locations are not equal and reside within the map\n");
         printf("./escape <row_map> <col_map> <row_player> <col_player> <row_goal> <col_goal>\n");
     }
     /* return true or false based on condition being checked */
@@ -102,19 +72,19 @@ int vMove(char* move)
 /**
  * @brief Verifies if there is a collapsed floor character at the specified coordinates.
  * 
- * @param usrIns, the command line inputs of the user (int [6]).
+ * @param canvasSize, the row and column size of the canvas (int [2]).
  * @param coords, the coordinates being checked for a collapsed floor character (int [2])
  * @param canvas, pointer to the game canvas (char***).
  * @param checkGoal, integer that confirms if the goal and player symbols should also be checked
  * 0 = false otherwise true (int).
  */
-int vFloor(int* usrIns, int* coords, char*** canvas, int checkGoal)
+int vFloor(int* canvasSize, int* coords, char*** canvas, int checkGoal)
 {
     int i, j;
     int verified = TRUE;
-    for (i=0;i<=usrIns[ROWS];i++)
+    for (i=0;i<=canvasSize[ROWS];i++)
     {
-        for(j=0;j<=usrIns[COLS];j++)
+        for(j=0;j<=canvasSize[COLS];j++)
         {
             /*Check if there is an collapsed floor at the given coordinates*/
             if((*canvas)[i][j] == FLOOR_SYM && i == (coords[0]+1) && j == (coords[1]+1))
@@ -136,14 +106,14 @@ int vFloor(int* usrIns, int* coords, char*** canvas, int checkGoal)
 /**
  * @brief Verifies the win condition.
  * 
- * @param usrIns, the command line inputs of the user (int [6]).
+ * @param goalCoords, the coordinates of the goal (int [2])
  * @param playerCoords, the coordinates of the current player's position (int [2])
  */
-int vWin(int* usrIns, int* playerCoords)
+int vWin(int* goalCoords, int* playerCoords)
 {
     int won = FALSE;
     /*Check if the player coordinates are equal to the goal*/
-    if(playerCoords[0] == usrIns[GOAL_ROW] && playerCoords[1] == usrIns[GOAL_COL])
+    if(playerCoords[0] == goalCoords[ROWS] && playerCoords[1] == goalCoords[COLS])
     {
         won = TRUE;
     }

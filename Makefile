@@ -17,7 +17,7 @@ main.o : main.c canvas.h toolbox.h verify.h gameplay.h random.h
 canvas.o : canvas.c canvas.h
 	$(CC) -c canvas.c $(CFLAGS)
 
-toolbox.o : toolbox.c toolbox.h
+toolbox.o : toolbox.c toolbox.h canvas.h
 	$(CC) -c toolbox.c $(CFLAGS)
 
 verify.o : verify.c verify.h gameplay.h canvas.h toolbox.h

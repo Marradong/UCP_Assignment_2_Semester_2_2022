@@ -6,10 +6,7 @@
 /* index for parameters specified by the command line user inputs */
 #define ROWS 0
 #define COLS 1
-#define PLAYER_ROW 2
-#define PLAYER_COL 3
-#define GOAL_ROW 4
-#define GOAL_COL 5
+#define FILE_IDX 2
 
 /* symbols used for the game canvas */
 #define BORDER_SYM '*'
@@ -18,7 +15,7 @@
 #define GOAL_SYM 'G'
 #define FLOOR_SYM 'X'
 
-void initCanvas(int* usrIns, int* playerCoords, char*** canvas);
+void initCanvas(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords);
 void printCanvas(int* usrIns, char*** canvas);
 void placeSym(int* coords, char*** canvas, char sym);
 void freeCanvas(int* usrIns, char*** canvas);
