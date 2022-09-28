@@ -5,6 +5,7 @@
 #include "verify.h"
 #include "gameplay.h"
 #include "random.h"
+#include "LinkedList.h"
 
 /**************************************************************************************************/
 /* Main loop of Game                   	      		                                         	  */
@@ -24,8 +25,10 @@ int main(int argc, char *argv[])
         pfMove mFunc = NULL;
         FILE* inputFile = NULL;
 
+        LinkedList* gameList = createList();
+
         initRandom();
-        initCanvas(inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords);
+        initCanvas(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords);
 
         /* determine player movement function based on borderless definition */
         #ifndef BORDERLESS
@@ -40,10 +43,10 @@ int main(int argc, char *argv[])
             /* Read user input for players next move */
             readMove(&usrKey);
             /* Move player */
-            (*mFunc)(&canvas, &usrKey, playerCoords, usrIns);
+            (*mFunc)(&canvas, &usrKey, playerCoords, canvasSize, &gameList);
             /* Check if win or lose condition is met after player moves */
-            winStatus = vWin(usrIns, playerCoords);
-            loseStatus = (vLose(&canvas, playerCoords, usrIns) || vLose(&canvas, goalCoords, usrIns));
+            winStatus = vWin(goalCoords, playerCoords);
+            loseStatus = (vLose(&canvas, playerCoords, canvasSize) || vLose(&canvas, goalCoords, canvasSize));
         }
         /* Print end game message based on win or lose */
         if (winStatus)
@@ -55,7 +58,7 @@ int main(int argc, char *argv[])
             printf("You Lose!\n");
         }
         /* Free game canvas memory */
-        freeCanvas(usrIns, &canvas);
+        freeCanvas(canvasSize, &canvas);
     }
     return 0;
 }

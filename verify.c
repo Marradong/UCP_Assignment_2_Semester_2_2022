@@ -33,7 +33,7 @@ int vArgs(int* numArgs)
 /**
  * @brief Verifies the size of the canvas specified by the user.
  * 
- * @param usrIns, the command line inputs of the user (int [6]).
+ * @param canvasSize, array of integers containing the size of the canvas (int[])
  */
 int vCanvasSize(int* canvasSize)
 {
@@ -72,7 +72,7 @@ int vMove(char* move)
 /**
  * @brief Verifies if there is a collapsed floor character at the specified coordinates.
  * 
- * @param canvasSize, the row and column size of the canvas (int [2]).
+ * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param coords, the coordinates being checked for a collapsed floor character (int [2])
  * @param canvas, pointer to the game canvas (char***).
  * @param checkGoal, integer that confirms if the goal and player symbols should also be checked
@@ -126,9 +126,9 @@ int vWin(int* goalCoords, int* playerCoords)
  * 
  * @param canvas, pointer to the game canvas (char***).
  * @param coords, the coordinates being checked for surrounding collapsed floor characters (int [2])
- * @param usrIns, the command line inputs of the user (int [6]).
+ * @param canvasSize, the command line inputs of the user (int [6]).
  */
-int vLose(char*** canvas, int* coords, int* usrIns)
+int vLose(char*** canvas, int* coords, int* canvasSize)
 {
     int lose = FALSE;
     /* the starting position of the coordinates being checked */
@@ -149,8 +149,8 @@ int vLose(char*** canvas, int* coords, int* usrIns)
             lose = TRUE;
         }
     #else 
-        int maxRow = usrIns[ROWS];
-        int maxCol = usrIns[COLS]; 
+        int maxRow = canvasSize[ROWS];
+        int maxCol = canvasSize[COLS]; 
         /* check left, right, up and down around the coordinates for a collapsed floor or border */
         /* check 'across' the canvas if a border character is found */
         cUp = ((*canvas)[sRow-1][sCol] == FLOOR_SYM) 

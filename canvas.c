@@ -10,7 +10,7 @@
 /**
  * @brief Dynamicly allocates memory to a 2D array of characters (the canvas).
  * 
- * @param usrIns the command line inputs of the user (int [6]).
+ * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
  */
 void createCanvas(int* canvasSize, char*** canvas)
@@ -109,7 +109,7 @@ void initCanvas(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int
 /**
  * @brief Prints the 2D array of characters (the canvas) to the cleared terminal.
  * 
- * @param usrIns the command line inputs of the user (int [6]).
+ * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
  */
 void printCanvas(int* canvasSize, char*** canvas)
@@ -157,14 +157,14 @@ void placeSym(int* coords, char*** canvas, char sym)
 /**
  * @brief Frees the dynamicly allocated memory of a 2D array of characters (the canvas).
  * 
- * @param usrIns the command line inputs of the user (int [6]).
+ * @param canvasSize the command line inputs of the user (int [6]).
  * @param canvas pointer to the game canvas (char***).
  */
-void freeCanvas(int* usrIns, char*** canvas)
+void freeCanvas(int* canvasSize, char*** canvas)
 {
     /* Establish number of rows in the array given by the users command line input */
     /* + 2 accounts for the rows that make up the canvas border */
-    int rows = usrIns[ROWS] + 2;
+    int rows = canvasSize[ROWS] + 2;
     int i;
 
     for (i=0;i<rows;i++)

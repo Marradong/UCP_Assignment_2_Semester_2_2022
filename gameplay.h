@@ -8,12 +8,13 @@
 #define RIGHT_KEY 'd'
 #define UNDO_KEY 'u'
 
+#include "LinkedList.h"
 /* Definition for pointer to movement function */
-typedef void (*pfMove)(char***, char*, int*, int*);
+typedef void (*pfMove)(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
 
 void readMove(char* usrKey);
-void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* usrIns);
-void collapseFloor(int* usrIns, char*** canvas);
-void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* usrIns);
+void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
+void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
+void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
 
 #endif
