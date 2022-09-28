@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
         LinkedList* gameList = createList();
 
         initRandom();
-        initCanvas(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords);
+        initCanvasFromFile(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords);
 
         /* determine player movement function based on borderless definition */
         #ifndef BORDERLESS

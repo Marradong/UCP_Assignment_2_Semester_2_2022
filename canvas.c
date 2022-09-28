@@ -54,7 +54,7 @@ void createCanvas(int* canvasSize, char*** canvas)
  * @param goalCoords, array of integers containing the coordinates of the goal (int[])
  * @param playerCoords, array of integers containing the coordinates of the player (int[])
  */
-void initCanvas(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords)
+void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords)
 {
     (*fInput) = fopen(argv[FILE_IDX], "r");
 

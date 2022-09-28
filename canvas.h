@@ -15,7 +15,7 @@
 #define GOAL_SYM 'G'
 #define FLOOR_SYM 'X'
 
-void initCanvas(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords);
+void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords);
 void printCanvas(int* usrIns, char*** canvas);
 void placeSym(int* coords, char*** canvas, char sym);
 void freeCanvas(int* usrIns, char*** canvas);
