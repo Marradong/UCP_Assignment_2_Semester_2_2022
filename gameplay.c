@@ -78,15 +78,17 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
     case LEFT_KEY:
     case RIGHT_KEY:
         changeCoords(playerCoords, usrKey);
+
         conditions = !vFloor(canvasSize, playerCoords, canvas, FALSE);
         #ifndef BORDERLESS
+            /* check if the new player coordinates lie outside the canvas border or are equal to a
+    collapsed floor */
+        /* -1 accounts for C indexing starting at 0 */
             conditions = conditions || (playerCoords[ROWS] > canvasSize[ROWS] - 1) 
             || (playerCoords[ROWS] < 0) || (playerCoords[COLS] > canvasSize[COLS] - 1) 
             || (playerCoords[COLS] < 0);
         #endif
-        /* check if the new player coordinates lie outside the canvas border or are equal to a
-    collapsed floor */
-        /* -1 accounts for C indexing starting at 0 */
+        
         if (conditions)
         {
             /* Invalid move, revert coordinates back to the original position */
@@ -95,7 +97,7 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
         }
         else
         {
-            Data newNodeData;
+            Data* newNodeData = createData();
 
             /* Valid move, remove player from old location and place player at new location */
             placeSym(tempCoords, canvas, SPACE_SYM);
@@ -103,24 +105,24 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
             /* Generate collapsed floor and reprint canvas after every successful move */
             collapseFloor(canvasSize, canvas, floorCoords);
 
-            newNodeData.playerCoords[ROWS] = tempCoords[ROWS];
-            newNodeData.playerCoords[COLS] = tempCoords[COLS];
-            newNodeData.floorCoords[ROWS] = floorCoords[ROWS];
-            newNodeData.floorCoords[COLS] = floorCoords[COLS];
+            newNodeData->playerCoords[ROWS] = tempCoords[ROWS];
+            newNodeData->playerCoords[COLS] = tempCoords[COLS];
+            newNodeData->floorCoords[ROWS] = floorCoords[ROWS];
+            newNodeData->floorCoords[COLS] = floorCoords[COLS];
 
-            addEndNode(gameList, &newNodeData);
+            addEndNode(gameList, newNodeData);
             printCanvas(canvasSize, canvas);
         }
         break;
     case UNDO_KEY:
         if (gameList->listLength != 0)
         {
-            Data *data = ((Data *)(gameList->end->data));
+            Data* data = ((Data*)(gameList->end->data));
 
-            playerCoords[ROWS] = data->playerCoords[ROWS];
-            playerCoords[COLS] = data->playerCoords[COLS];
-            floorCoords[ROWS] = data->floorCoords[ROWS];
-            floorCoords[COLS] = data->floorCoords[COLS];
+            playerCoords[ROWS] = (int)data->playerCoords[ROWS];
+            playerCoords[COLS] = (int)data->playerCoords[COLS];
+            floorCoords[ROWS] = (int)data->floorCoords[ROWS];
+            floorCoords[COLS] = (int)data->floorCoords[COLS];
 
             removeEndNode(gameList, &freeData);
 
@@ -136,10 +138,6 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
     }
     /* Reset user input character to invalid character */
     (*usrKey) = ' ';
-}
-
-void freeData(void *data)
-{
 }
 
 void changeCoords(int *playerCoords, char *usrKey)

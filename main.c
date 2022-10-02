@@ -36,11 +36,8 @@ int main(int argc, char *argv[])
             readMove(&usrKey);
             /* Move player */
             /* determine player movement function based on borderless definition */
-        #ifndef BORDERLESS
-                movePlayer(&canvas, &usrKey, playerCoords, canvasSize, gameList);
-        #else
-                moveBorderless(&canvas, &usrKey, playerCoords, canvasSize, gameList);
-        #endif
+            movePlayer(&canvas, &usrKey, playerCoords, canvasSize, gameList);
+        
             /* Check if win or lose condition is met after player moves */
             winStatus = vWin(goalCoords, playerCoords);
             loseStatus = (vLose(&canvas, playerCoords, canvasSize) || vLose(&canvas, goalCoords, canvasSize));

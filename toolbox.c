@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "canvas.h"
 #include "toolbox.h"
 
 /**************************************************************************************************/
@@ -22,4 +23,19 @@ void charToInt(char** cArr, int* iArr, int* len)
     {
         iArr[i-1] = atoi(cArr[i]);
     }
+}
+
+Data* createData()
+{
+    Data* newData = (Data*)malloc(sizeof(Data));
+
+    return newData;
+}
+
+void freeData(void *data)
+{
+    Data* dataToFree = (Data*)data;
+
+    dataToFree = NULL;
+    free(dataToFree);
 }

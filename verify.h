@@ -1,5 +1,5 @@
 #ifndef VERIFY_H
-#define TOOLBOX_H
+#define VERIFY_H
 
 /* Boolean definitions */
 #define FALSE 0

@@ -22,9 +22,8 @@ void addEndNode(LinkedList* curList, void* nodeData)
 
     if (curList->end)
     {
-        Node* lastNode = curList->end;
-        lastNode->next = newNode;
-        newNode->previous = lastNode;
+        curList->end->next = newNode;
+        newNode->previous = curList->end;
         curList->end = newNode;
         curList->listLength++;
     }

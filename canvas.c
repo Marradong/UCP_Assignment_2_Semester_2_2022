@@ -119,7 +119,7 @@ void printCanvas(int* canvasSize, char*** canvas)
     int i, j;
 
     /* clears all previous output on the terminal */
-    /*system("clear");*/
+    system("clear");
 
     /* prints each character in the canvas 1 by 1 with a new line character after each row */
     for (i=0;i<rows;i++)

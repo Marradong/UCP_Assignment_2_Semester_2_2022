@@ -10,16 +10,9 @@
 
 #include "LinkedList.h"
 
-typedef struct Data
-{
-	int playerCoords[2];
-	int floorCoords[2];
-} Data;
-
 void readMove(char* usrKey);
 void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList* list);
 void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
-void freeData(void* data);
 void changeCoords(int* playerCoords, char* usrKey);
 
 #endif
