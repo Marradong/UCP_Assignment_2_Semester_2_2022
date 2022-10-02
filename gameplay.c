@@ -66,7 +66,7 @@ void collapseFloor(int *canvasSize, char ***canvas, int *floorCoords)
 void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize, LinkedList *gameList)
 {
     /* Temporarily store player location in case of invalid move */
-    int tempCoords[2], floorCoords[2];
+    int tempCoords[2], floorCoords[2], conditions;
     tempCoords[ROWS] = playerCoords[ROWS];
     tempCoords[COLS] = playerCoords[COLS];
 
@@ -78,13 +78,16 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
     case LEFT_KEY:
     case RIGHT_KEY:
         changeCoords(playerCoords, usrKey);
-
+        conditions = !vFloor(canvasSize, playerCoords, canvas, FALSE);
+        #ifndef BORDERLESS
+            conditions = conditions || (playerCoords[ROWS] > canvasSize[ROWS] - 1) 
+            || (playerCoords[ROWS] < 0) || (playerCoords[COLS] > canvasSize[COLS] - 1) 
+            || (playerCoords[COLS] < 0);
+        #endif
         /* check if the new player coordinates lie outside the canvas border or are equal to a
     collapsed floor */
         /* -1 accounts for C indexing starting at 0 */
-        if ((playerCoords[ROWS] > canvasSize[ROWS] - 1) || (playerCoords[ROWS] < 0) 
-        || (playerCoords[COLS] > canvasSize[COLS] - 1) || (playerCoords[COLS] < 0) 
-        || !vFloor(canvasSize, playerCoords, canvas, FALSE))
+        if (conditions)
         {
             /* Invalid move, revert coordinates back to the original position */
             playerCoords[ROWS] = tempCoords[ROWS];
@@ -93,101 +96,44 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
         else
         {
             Data newNodeData;
+
             /* Valid move, remove player from old location and place player at new location */
             placeSym(tempCoords, canvas, SPACE_SYM);
             placeSym(playerCoords, canvas, PLAYER_SYM);
             /* Generate collapsed floor and reprint canvas after every successful move */
             collapseFloor(canvasSize, canvas, floorCoords);
-            newNodeData.playerCoords = tempCoords;
-            newNodeData.floorCoords = floorCoords;
+
+            newNodeData.playerCoords[ROWS] = tempCoords[ROWS];
+            newNodeData.playerCoords[COLS] = tempCoords[COLS];
+            newNodeData.floorCoords[ROWS] = floorCoords[ROWS];
+            newNodeData.floorCoords[COLS] = floorCoords[COLS];
+
             addEndNode(gameList, &newNodeData);
             printCanvas(canvasSize, canvas);
         }
         break;
     case UNDO_KEY:
-        Data *data = (Data *)(gameList->end->data);
-        playerCoords[ROWS] = data->playerCoords[ROWS];
-        playerCoords[COLS] = data->playerCoords[COLS];
-        floorCoords[ROWS] = data->floorCoords[ROWS];
-        floorCoords[COLS] = data->floorCoords[COLS];
-
-        removeEndNode(gameList, &freeData);
-
-        placeSym(tempCoords, canvas, SPACE_SYM);
-        placeSym(playerCoords, canvas, PLAYER_SYM);
-        placeSym(floorCoords, canvas, SPACE_SYM);
-        break;
-    default:
-        break;
-    }
-    /* Reset user input character to invalid character */
-    (*usrKey) = ' ';
-}
-
-/**
- * @brief Moves player based off user input key (ignores borders)
- *
- * @param canvas, pointer to the game canvas (char***).
- * @param usrKey, pointer to the keyboard charater associated with the players next move (char*).
- * @param playerCoords, current coordinates of the player on the canvas (int [2]).
- * @param usrIns, the command line inputs of the user (int [6]).
- */
-void moveBorderless(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize, LinkedList *gameList)
-{
-    /* Temporarily store player location in case of invalid move */
-    int tempCoords[2], floorCoords[2];
-    tempCoords[ROWS] = playerCoords[ROWS];
-    tempCoords[COLS] = playerCoords[COLS];
-
-    /* Change the player coordinates in the direction indicated by the user input character */
-    switch ((*usrKey))
-    {
-    case UP_KEY:
-    case DOWN_KEY:
-    case LEFT_KEY:
-    case RIGHT_KEY:
-        changeCoords(playerCoords, usrKey);
-
-        /* check if the new player coordinates are equal to a collapsed floor */
-        if (vFloor(canvasSize, playerCoords, canvas, FALSE))
+        if (gameList->listLength != 0)
         {
-            Data newNodeData;
-            /* Valid move, remove player from old location and place player at new location */
+            Data *data = ((Data *)(gameList->end->data));
+
+            playerCoords[ROWS] = data->playerCoords[ROWS];
+            playerCoords[COLS] = data->playerCoords[COLS];
+            floorCoords[ROWS] = data->floorCoords[ROWS];
+            floorCoords[COLS] = data->floorCoords[COLS];
+
+            removeEndNode(gameList, &freeData);
+
             placeSym(tempCoords, canvas, SPACE_SYM);
             placeSym(playerCoords, canvas, PLAYER_SYM);
-            /* Generate collapsed floor and reprint canvas after every successful move */
-            collapseFloor(canvasSize, canvas, floorCoords);
-            newNodeData.playerCoords = tempCoords;
-            newNodeData.floorCoords = floorCoords;
-            addEndNode(gameList, &newNodeData);
+            placeSym(floorCoords, canvas, SPACE_SYM);
 
             printCanvas(canvasSize, canvas);
         }
-        else
-        {
-            /* Invalid move, revert coordinates back to the original position */
-            playerCoords[ROWS] = tempCoords[ROWS];
-            playerCoords[COLS] = tempCoords[COLS];
-        }
-        break;
-    case UNDO_KEY:
-        Node *lastNode = gameList->end;
-        Data *data = lastNode->data;
-        playerCoords[ROWS] = data->playerCoords[ROWS];
-        playerCoords[COLS] = data->playerCoords[COLS];
-        floorCoords[ROWS] = data->floorCoords[ROWS];
-        floorCoords[COLS] = data->floorCoords[COLS];
-
-        removeEndNode(gameList, &freeData);
-
-        placeSym(tempCoords, canvas, SPACE_SYM);
-        placeSym(playerCoords, canvas, PLAYER_SYM);
-        placeSym(floorCoords, canvas, SPACE_SYM);
         break;
     default:
         break;
     }
-
     /* Reset user input character to invalid character */
     (*usrKey) = ' ';
 }
