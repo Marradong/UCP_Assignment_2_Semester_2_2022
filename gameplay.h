@@ -12,6 +12,12 @@
 /* Definition for pointer to movement function */
 typedef void (*pfMove)(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
 
+typedef struct Data
+{
+	int* playerCoords;
+	int* floorCoords;
+} Data;
+
 void readMove(char* usrKey);
 void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
 void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);

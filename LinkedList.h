@@ -1,11 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-typedef struct Data
-{
-	int* playerCoords;
-	int* floorCoords;
-} Data;
+typedef void (*dataFunction)(void* data);
 
 typedef struct Node
 {

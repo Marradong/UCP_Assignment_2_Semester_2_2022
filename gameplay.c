@@ -225,3 +225,8 @@ void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvas
     /* Reset user input character to invalid character */
     (*usrKey) = ' ';
 }
+
+void freeData(void* data)
+{
+    
+}

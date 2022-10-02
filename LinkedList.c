@@ -14,51 +14,78 @@ LinkedList* createList()
     return newList;
 }
 
-void addEndNode(LinkedList* currentList, void* nodeData)
+void addEndNode(LinkedList* curList, void* nodeData)
 {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = nodeData;
     newNode->next = NULL;
 
-    if (currentList->end)
+    if (curList->end)
     {
-        Node* lastNode = currentList->end;
+        Node* lastNode = curList->end;
         lastNode->next = newNode;
         newNode->previous = lastNode;
-        currentList->end = newNode;
-        currentList->listLength++;
+        curList->end = newNode;
+        curList->listLength++;
     }
     else
     {
-        currentList->start = newNode;
-        currentList->end = newNode;
+        curList->start = newNode;
+        curList->end = newNode;
         newNode->previous = NULL;
-        currentList->listLength++;
+        curList->listLength++;
     }
 }
 
-void removeEndNode(LinkedList* currentList)
+void removeEndNode(LinkedList* curList, dataFunction fPtr)
 {
-    Node* endNode = currentList->end;
+    Node* endNode = curList->end;
 
     if (endNode)
     {
-        if (currentList->listLength > 1)
+        if (curList->listLength > 1)
         {
             Node* newEndNode = endNode->previous;
             newEndNode->next = NULL;
-            currentList->end = newEndNode;
+            curList->end = newEndNode;
         }
         else
         {
-            currentList->start = NULL;
-            currentList->end = NULL;
+            curList->start = NULL;
+            curList->end = NULL;
         }
-        currentList->listLength--;
+        curList->listLength--;
 
         endNode->next = NULL;
         endNode->previous = NULL;
+        (*fPtr)(endNode->data);
         endNode->data = NULL;
+
         free(endNode);
     }
+}
+
+void freeList(LinkedList* curList, dataFunction fPtr)
+{
+    Node* curNode = curList->start;
+	Node* temp;
+	
+	while (curNode)
+	{
+		temp = curNode->next;
+
+		curNode->next = NULL;
+        curNode->previous = NULL;
+        (*fPtr)(curNode->data);
+		curNode->data = NULL;
+
+		free(curNode);
+		
+		curNode = temp;		
+	}	
+    curList->listLength = 0;
+    curList->end = NULL;
+    curList->start = NULL;
+	
+	free(curList);
 }
