@@ -104,7 +104,7 @@ void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize
     }
     else
     {
-        if(usrKey == UNDO_KEY)
+        if((*usrKey) == UNDO_KEY && (*gameList)->listLength != 0)
         {
             Data* data = (Data*)((*gameList)->end->data);
             playerCoords[ROWS] = data->playerCoords[ROWS];
@@ -112,7 +112,7 @@ void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize
             floorCoords[ROWS] = data->floorCoords[ROWS];
             floorCoords[COLS] = data->floorCoords[COLS];
 
-            removeEndNode((*gameList));
+            removeEndNode((*gameList), &freeData);
 
             placeSym(tempCoords, canvas, SPACE_SYM);
             placeSym(playerCoords, canvas, PLAYER_SYM);
@@ -120,13 +120,15 @@ void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize
         }
         else
         {
+            Data newNodeData;
             /* Valid move, remove player from old location and place player at new location */
             placeSym(tempCoords, canvas, SPACE_SYM);
             placeSym(playerCoords, canvas, PLAYER_SYM);
             /* Generate collapsed floor and reprint canvas after every successful move */
             collapseFloor(canvasSize, canvas, floorCoords);
-            Data newNode = {tempCoords, floorCoords};
-            appendNewNode((*gameList), &newNode);
+            newNodeData.playerCoords = tempCoords;
+            newNodeData.floorCoords = floorCoords;
+            addEndNode((*gameList), &newNodeData);
         }
         printCanvas(canvasSize, canvas);
     }
@@ -190,15 +192,16 @@ void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvas
     /* check if the new player coordinates are equal to a collapsed floor */
     if(vFloor(canvasSize, playerCoords, canvas, FALSE))
     {
-        if(usrKey == UNDO_KEY)
+        if((*usrKey) == UNDO_KEY && (*gameList)->listLength != 0)
         {
-            Data* data = (Data*)((*gameList)->end->data);
+            Node* lastNode = (*gameList)->end;
+            Data* data = lastNode->data;
             playerCoords[ROWS] = data->playerCoords[ROWS];
             playerCoords[COLS] = data->playerCoords[COLS];
             floorCoords[ROWS] = data->floorCoords[ROWS];
             floorCoords[COLS] = data->floorCoords[COLS];
 
-            removeEndNode((*gameList));
+            removeEndNode((*gameList), &freeData);
 
             placeSym(tempCoords, canvas, SPACE_SYM);
             placeSym(playerCoords, canvas, PLAYER_SYM);
@@ -206,13 +209,15 @@ void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvas
         }
         else
         {
+            Data newNodeData;
             /* Valid move, remove player from old location and place player at new location */
             placeSym(tempCoords, canvas, SPACE_SYM);
             placeSym(playerCoords, canvas, PLAYER_SYM);
             /* Generate collapsed floor and reprint canvas after every successful move */
             collapseFloor(canvasSize, canvas, floorCoords);
-            Data newNode = {tempCoords, floorCoords};
-            appendNewNode((*gameList), &newNode);
+            newNodeData.playerCoords = tempCoords;
+            newNodeData.floorCoords = floorCoords;
+            addEndNode((*gameList), &newNodeData);
         }
         printCanvas(canvasSize, canvas);
     }

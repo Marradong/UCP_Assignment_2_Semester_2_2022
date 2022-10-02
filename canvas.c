@@ -58,7 +58,7 @@ void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasS
 {
     (*fInput) = fopen(argv[FILE_IDX], "r");
 
-        if(fInput == NULL)
+        if((*fInput) == NULL)
         {
             perror("File Opening Error: Please check file name is correct and the file exist");
         }
@@ -68,13 +68,13 @@ void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasS
             int numRead = 3;
             char cSymbol;
 
-            fscanf(fInput, "%d %d", canvasSize[ROWS], canvasSize[COLS]);
+            fscanf((*fInput), "%d %d", &canvasSize[ROWS], &canvasSize[COLS]);
 
             createCanvas(canvasSize, canvas);
 
             while (numRead == 3)
             {
-                numRead = fscanf(fInput, "%d %d %c", coords[ROWS], coords[COLS], &cSymbol);
+                numRead = fscanf((*fInput), "%d %d %c", &coords[ROWS], &coords[COLS], &cSymbol);
 
                 if(cSymbol == PLAYER_SYM)
                 {
@@ -95,12 +95,12 @@ void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasS
             }
             printCanvas(canvasSize, canvas);
 
-            if(ferror(fInput))
+            if(ferror((*fInput)))
             {
                 perror("File Reading Error: ");
             }
 
-            fclose(fInput);
+            fclose((*fInput));
         }
 }
 
