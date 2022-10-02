@@ -22,5 +22,6 @@ void readMove(char* usrKey);
 void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
 void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
 void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
+void freeData(void* data);
 
 #endif

@@ -68,13 +68,11 @@ void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasS
             int numRead = 3;
             char cSymbol;
 
-            fscanf(fInput, "%d %d", coords[ROWS], coords[COLS]);
-            canvasSize[ROWS] = coords[ROWS];
-            canvasSize[COLS] = coords[COLS];
+            fscanf(fInput, "%d %d", canvasSize[ROWS], canvasSize[COLS]);
 
-            createCanvas(coords, canvas);
+            createCanvas(canvasSize, canvas);
 
-            while (numRead != 3)
+            while (numRead == 3)
             {
                 numRead = fscanf(fInput, "%d %d %c", coords[ROWS], coords[COLS], &cSymbol);
 

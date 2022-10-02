@@ -6,7 +6,7 @@
 /* index for parameters specified by the command line user inputs */
 #define ROWS 0
 #define COLS 1
-#define FILE_IDX 2
+#define FILE_IDX 1
 
 /* symbols used for the game canvas */
 #define BORDER_SYM '*'

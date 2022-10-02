@@ -20,5 +20,6 @@ typedef struct LinkedList
 LinkedList* createList();
 void appendNewNode(LinkedList* currentList, void* nodeData);
 void removeEndNode(LinkedList* currentList);
+void freeList(LinkedList* curList, dataFunction fPtr);
 
 #endif

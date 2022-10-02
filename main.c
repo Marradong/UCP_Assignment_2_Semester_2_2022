@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
         }
         /* Free game canvas memory */
         freeCanvas(canvasSize, &canvas);
+        freeList(gameList, &freeData);
     }
     return 0;
 }
