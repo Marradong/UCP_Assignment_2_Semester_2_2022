@@ -77,7 +77,7 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
     case DOWN_KEY:
     case LEFT_KEY:
     case RIGHT_KEY:
-        changeCoords(playerCoords, usrKey);
+        changeCoords(playerCoords, canvasSize, usrKey);
 
         conditions = !vFloor(canvasSize, playerCoords, canvas, FALSE);
         #ifndef BORDERLESS
@@ -140,7 +140,7 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
     (*usrKey) = ' ';
 }
 
-void changeCoords(int *playerCoords, char *usrKey)
+void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
 {
     switch ((*usrKey))
     {

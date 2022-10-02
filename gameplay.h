@@ -13,6 +13,6 @@
 void readMove(char* usrKey);
 void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList* list);
 void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
-void changeCoords(int* playerCoords, char* usrKey);
+void changeCoords(int* playerCoords, int* canvasSize, char* usrKey);
 
 #endif
