@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
         int loseStatus = FALSE;
         char **canvas = NULL;
         char usrKey = ' ';
-        pfMove mFunc = NULL;
         FILE* inputFile = NULL;
 
         LinkedList* gameList = createList();
@@ -30,20 +29,18 @@ int main(int argc, char *argv[])
         initRandom();
         initCanvasFromFile(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords);
 
-        /* determine player movement function based on borderless definition */
-        #ifndef BORDERLESS
-                mFunc = &movePlayer;
-        #else
-                mFunc = &moveBorderless;
-        #endif
-
         /* Game loop - continue asking player for moves until a win or lose condition is met */
         while (!(winStatus || loseStatus))
         {
             /* Read user input for players next move */
             readMove(&usrKey);
             /* Move player */
-            (*mFunc)(&canvas, &usrKey, playerCoords, canvasSize, &gameList);
+            /* determine player movement function based on borderless definition */
+        #ifndef BORDERLESS
+                movePlayer(&canvas, &usrKey, playerCoords, canvasSize, gameList);
+        #else
+                moveBorderless(&canvas, &usrKey, playerCoords, canvasSize, gameList);
+        #endif
             /* Check if win or lose condition is met after player moves */
             winStatus = vWin(goalCoords, playerCoords);
             loseStatus = (vLose(&canvas, playerCoords, canvasSize) || vLose(&canvas, goalCoords, canvasSize));

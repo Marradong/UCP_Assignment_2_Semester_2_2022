@@ -9,19 +9,17 @@
 #define UNDO_KEY 'u'
 
 #include "LinkedList.h"
-/* Definition for pointer to movement function */
-typedef void (*pfMove)(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
 
 typedef struct Data
 {
-	int* playerCoords;
-	int* floorCoords;
+	int playerCoords[2];
+	int floorCoords[2];
 } Data;
 
 void readMove(char* usrKey);
-void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
+void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList* list);
 void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
-void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
+void moveBorderless(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList* list);
 void freeData(void* data);
 
 #endif
