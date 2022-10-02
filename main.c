@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
         LinkedList* gameList = createList();
 
         initRandom();
-        initCanvasFromFile(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords);
+        initCanvasFromFile(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, gameList);
 
         /* Game loop - continue asking player for moves until a win or lose condition is met */
         while (!(winStatus || loseStatus))

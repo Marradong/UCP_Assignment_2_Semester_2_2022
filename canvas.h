@@ -15,8 +15,10 @@
 #define GOAL_SYM 'G'
 #define FLOOR_SYM 'X'
 
-void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords);
-void printCanvas(int* usrIns, char*** canvas);
+#include "LinkedList.h"
+
+void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords, LinkedList* gameList);
+void printCanvas(int* canvasSize, char*** canvas, LinkedList* gameList);
 void placeSym(int* coords, char*** canvas, char sym);
 void freeCanvas(int* usrIns, char*** canvas);
 

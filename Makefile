@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -pedantic -ansi -g
-OBJ = main.o canvas.o toolbox.o verify.o gameplay.o terminal.o random.o LinkedList.o
+OBJ = main.o canvas.o toolbox.o verify.o gameplay.o terminal.o random.o LinkedList.o color.o
 EXEC = escape
 
 ifdef BORDERLESS
@@ -14,7 +14,7 @@ $(EXEC) : $(OBJ)
 main.o : main.c canvas.h toolbox.h verify.h gameplay.h random.h LinkedList.h
 	$(CC) -c main.c $(CFLAGS)
 
-canvas.o : canvas.c canvas.h
+canvas.o : canvas.c canvas.h LinkedList.h toolbox.h
 	$(CC) -c canvas.c $(CFLAGS)
 
 toolbox.o : toolbox.c toolbox.h canvas.h
@@ -34,6 +34,9 @@ random.o : random.c random.h
 
 LinkedList.o : LinkedList.c LinkedList.h
 	$(CC) -c LinkedList.c $(CFLAGS)
+
+color.o : color.c color.h
+	$(CC) -c color.c $(CFLAGS)
 
 clean :
 	rm -f $(EXEC) $(OBJ)
@@ -58,4 +61,5 @@ clean :
 # make gameplay.o <- build the target "gameplay.o"
 # make terminal.o <- build the target "terminal.o"
 # make LinkedList.o <- build the target "LinkedList.o"
+# make color.o <- build the target "color.o"
 # make clean <- build the target "clean"

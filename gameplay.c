@@ -111,7 +111,7 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
             newNodeData->floorCoords[COLS] = floorCoords[COLS];
 
             addEndNode(gameList, newNodeData);
-            printCanvas(canvasSize, canvas);
+            printCanvas(canvasSize, canvas, gameList);
         }
         break;
     case UNDO_KEY:
@@ -130,7 +130,7 @@ void movePlayer(char ***canvas, char *usrKey, int *playerCoords, int *canvasSize
             placeSym(playerCoords, canvas, PLAYER_SYM);
             placeSym(floorCoords, canvas, SPACE_SYM);
 
-            printCanvas(canvasSize, canvas);
+            printCanvas(canvasSize, canvas, gameList);
         }
         break;
     default:

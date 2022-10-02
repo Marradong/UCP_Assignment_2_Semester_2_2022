@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "canvas.h"
+#include "LinkedList.h"
+#include "toolbox.h"
+#include "color.h"
 
 /**************************************************************************************************/
 /* Canvas Initialisation, Display and Termination Methods                   	      		  	  */
@@ -54,7 +57,7 @@ void createCanvas(int* canvasSize, char*** canvas)
  * @param goalCoords, array of integers containing the coordinates of the goal (int[])
  * @param playerCoords, array of integers containing the coordinates of the player (int[])
  */
-void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords)
+void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords, LinkedList* gameList)
 {
     (*fInput) = fopen(argv[FILE_IDX], "r");
 
@@ -93,7 +96,7 @@ void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasS
                     placeSym(coords, canvas, FLOOR_SYM);
                 }
             }
-            printCanvas(canvasSize, canvas);
+            printCanvas(canvasSize, canvas, gameList);
 
             if(ferror((*fInput)))
             {
@@ -110,13 +113,14 @@ void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasS
  * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
  */
-void printCanvas(int* canvasSize, char*** canvas)
+void printCanvas(int* canvasSize, char*** canvas, LinkedList* gameList)
 {
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
     int rows = canvasSize[ROWS] + 2;
     int cols = canvasSize[COLS] + 2;
     int i, j;
+    
 
     /* clears all previous output on the terminal */
     system("clear");
@@ -126,6 +130,27 @@ void printCanvas(int* canvasSize, char*** canvas)
     {
         for(j=0;j<cols;j++)
         {
+            if((*canvas)[i][j] == PLAYER_SYM)
+            {
+                setForeground("blue");
+                setBackground("reset");
+            }
+            else if((*canvas)[i][j] == GOAL_SYM)
+            {
+                setForeground("green");
+                setBackground("reset");
+            }
+            else if(gameList->end != NULL && i == (((Data*)(gameList->end->data))->floorCoords[ROWS] + 1) 
+            && j == (((Data*)(gameList->end->data))->floorCoords[COLS] + 1))
+            {
+                setForeground("white");
+                setBackground("red");
+            }
+            else
+            {
+                setForeground("reset");
+                setBackground("reset");
+            }
             printf("%c", (*canvas)[i][j]);
         }
         printf("\n");
