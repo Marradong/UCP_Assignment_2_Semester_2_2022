@@ -14,7 +14,7 @@
 int main(int argc, char *argv[])
 {
     /* Check if the correct number of command line arguments was entered */
-    if (vArgs(&argc))
+    if (vArgs(&argc) && vFile(argv))
     {
         /* initialise game variables */
         int canvasSize[2], goalCoords[2], playerCoords[2];
@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 
         initRandom();
         initCanvasFromFile(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, gameList);
+        
 
         /* Game loop - continue asking player for moves until a win or lose condition is met */
         while (!(winStatus || loseStatus))

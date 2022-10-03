@@ -5,6 +5,7 @@
 #include "LinkedList.h"
 #include "toolbox.h"
 #include "color.h"
+#include "verify.h"
 
 /**************************************************************************************************/
 /* Canvas Initialisation, Display and Termination Methods                   	      		  	  */
@@ -12,27 +13,27 @@
 
 /**
  * @brief Dynamicly allocates memory to a 2D array of characters (the canvas).
- * 
+ *
  * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
  */
-void createCanvas(int* canvasSize, char*** canvas)
+void createCanvas(int *canvasSize, char ***canvas)
 {
     int i;
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
     int rows = canvasSize[ROWS] + 2;
     int cols = canvasSize[COLS] + 2;
-    
+
     /* Dynamicly allocate memory the size of a char* to the rows of the array  */
-    (*canvas) = (char**)malloc(rows * sizeof(char*));
+    (*canvas) = (char **)malloc(rows * sizeof(char *));
 
     /* For each row dynamicly allocate memory the size of a char to the columns of the array */
-    for (i=0;i<rows;i++)
+    for (i = 0; i < rows; i++)
     {
-        (*canvas)[i] = (char*)malloc(cols * sizeof(char));
+        (*canvas)[i] = (char *)malloc(cols * sizeof(char));
 
-        if(i == 0 || i == (rows - 1))
+        if (i == 0 || i == (rows - 1))
         {
             /* if it is the first or last row place a border symbol in every column */
             memset((*canvas)[i], BORDER_SYM, cols);
@@ -49,7 +50,7 @@ void createCanvas(int* canvasSize, char*** canvas)
 
 /**
  * @brief Initialises and prints the canvas along with player and goal.
- * 
+ *
  * @param fInput, pointer to pointer of the file entered by the user in the command line (FILE**)
  * @param canvas, pointer to the game canvas (char***).
  * @param argv, pointer to array of characters entered by the user in the command line (char**)
@@ -57,91 +58,93 @@ void createCanvas(int* canvasSize, char*** canvas)
  * @param goalCoords, array of integers containing the coordinates of the goal (int[])
  * @param playerCoords, array of integers containing the coordinates of the player (int[])
  */
-void initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords, LinkedList* gameList)
+int initCanvasFromFile(FILE **fInput, char ***canvas, char **argv, int *canvasSize, int *goalCoords, int *playerCoords, LinkedList *gameList)
 {
+    int fileError = FALSE;
     (*fInput) = fopen(argv[FILE_IDX], "r");
 
-        if((*fInput) == NULL)
+    if ((*fInput) == NULL)
+    {
+        perror("File Opening Error: Please check file name is correct and the file exist");
+        fileError = TRUE;
+    }
+    else
+    {
+        int coords[2];
+        int numRead = 3;
+        char cSymbol;
+
+        fscanf((*fInput), "%d %d", &canvasSize[ROWS], &canvasSize[COLS]);
+
+        createCanvas(canvasSize, canvas);
+
+        while (numRead == 3)
         {
-            perror("File Opening Error: Please check file name is correct and the file exist");
-        }
-        else
-        {            
-            int coords[2]; 
-            int numRead = 3;
-            char cSymbol;
+            numRead = fscanf((*fInput), "%d %d %c", &coords[ROWS], &coords[COLS], &cSymbol);
 
-            fscanf((*fInput), "%d %d", &canvasSize[ROWS], &canvasSize[COLS]);
-
-            createCanvas(canvasSize, canvas);
-
-            while (numRead == 3)
+            if (cSymbol == PLAYER_SYM)
             {
-                numRead = fscanf((*fInput), "%d %d %c", &coords[ROWS], &coords[COLS], &cSymbol);
-
-                if(cSymbol == PLAYER_SYM)
-                {
-                    placeSym(coords, canvas, PLAYER_SYM);
-                    playerCoords[ROWS] = coords[ROWS];
-                    playerCoords[COLS] = coords[COLS];
-                }
-                else if(cSymbol == GOAL_SYM)
-                {
-                    placeSym(coords, canvas, GOAL_SYM);
-                    goalCoords[ROWS] = coords[ROWS];
-                    goalCoords[COLS] = coords[COLS];
-                }
-                else if(cSymbol == FLOOR_SYM)
-                {
-                    placeSym(coords, canvas, FLOOR_SYM);
-                }
+                placeSym(coords, canvas, PLAYER_SYM);
+                playerCoords[ROWS] = coords[ROWS];
+                playerCoords[COLS] = coords[COLS];
             }
-            printCanvas(canvasSize, canvas, gameList);
-
-            if(ferror((*fInput)))
+            else if (cSymbol == GOAL_SYM)
             {
-                perror("File Reading Error: ");
+                placeSym(coords, canvas, GOAL_SYM);
+                goalCoords[ROWS] = coords[ROWS];
+                goalCoords[COLS] = coords[COLS];
             }
-
-            fclose((*fInput));
+            else if (cSymbol == FLOOR_SYM)
+            {
+                placeSym(coords, canvas, FLOOR_SYM);
+            }
         }
+        printCanvas(canvasSize, canvas, gameList);
+
+        if (ferror((*fInput)))
+        {
+            perror("A File Closing Error Occured");
+            fileError = TRUE;
+        }
+
+        fclose((*fInput));
+    }
+    return fileError;
 }
 
 /**
  * @brief Prints the 2D array of characters (the canvas) to the cleared terminal.
- * 
+ *
  * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
  */
-void printCanvas(int* canvasSize, char*** canvas, LinkedList* gameList)
+void printCanvas(int *canvasSize, char ***canvas, LinkedList *gameList)
 {
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
     int rows = canvasSize[ROWS] + 2;
     int cols = canvasSize[COLS] + 2;
     int i, j;
-    
 
     /* clears all previous output on the terminal */
     system("clear");
 
     /* prints each character in the canvas 1 by 1 with a new line character after each row */
-    for (i=0;i<rows;i++)
+    for (i = 0; i < rows; i++)
     {
-        for(j=0;j<cols;j++)
+        for (j = 0; j < cols; j++)
         {
-            if((*canvas)[i][j] == PLAYER_SYM)
+            if ((*canvas)[i][j] == PLAYER_SYM)
             {
                 setForeground("blue");
                 setBackground("reset");
             }
-            else if((*canvas)[i][j] == GOAL_SYM)
+            else if ((*canvas)[i][j] == GOAL_SYM)
             {
                 setForeground("green");
                 setBackground("reset");
             }
-            else if(gameList->end != NULL && i == (((Data*)(gameList->end->data))->floorCoords[ROWS] + 1) 
-            && j == (((Data*)(gameList->end->data))->floorCoords[COLS] + 1))
+            else if (gameList->end != NULL && i == (((Data *)(gameList->end->data))->floorCoords[ROWS] + 1) && j == (((Data *)(gameList->end->data))->floorCoords[COLS] + 1))
             {
                 setForeground("white");
                 setBackground("red");
@@ -165,12 +168,12 @@ void printCanvas(int* canvasSize, char*** canvas, LinkedList* gameList)
 
 /**
  * @brief Places a symbol (player, goal, floor) on the canvas.
- * 
+ *
  * @param coords the coordinates of the symbol (int [2]).
  * @param canvas pointer to the game canvas (char***).
  * @param sym the symbol to place on the canvas (char).
  */
-void placeSym(int* coords, char*** canvas, char sym)
+void placeSym(int *coords, char ***canvas, char sym)
 {
     /* Equates the value of the canvas at the given coordinates to the specified a symbol */
     /* + 1 accounts for canvas border */
@@ -179,18 +182,18 @@ void placeSym(int* coords, char*** canvas, char sym)
 
 /**
  * @brief Frees the dynamicly allocated memory of a 2D array of characters (the canvas).
- * 
+ *
  * @param canvasSize the command line inputs of the user (int [6]).
  * @param canvas pointer to the game canvas (char***).
  */
-void freeCanvas(int* canvasSize, char*** canvas)
+void freeCanvas(int *canvasSize, char ***canvas)
 {
     /* Establish number of rows in the array given by the users command line input */
     /* + 2 accounts for the rows that make up the canvas border */
     int rows = canvasSize[ROWS] + 2;
     int i;
 
-    for (i=0;i<rows;i++)
+    for (i = 0; i < rows; i++)
     {
         /* Free and nullify the memory dynamicly allocated to the columns in the array */
         free((*canvas)[i]);
