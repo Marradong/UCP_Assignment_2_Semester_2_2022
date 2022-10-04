@@ -8,7 +8,7 @@ typedef struct Data
 } Data;
 
 void charToInt(char** cArr, int* iArr, int* len);
-Data* createData();
+void createData(Data** newData);
 void freeData(void* data);
 
 #endif

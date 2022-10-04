@@ -118,7 +118,8 @@ static void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
 static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList **gList)
 {
     /* create new node for linked list */
-    Data* newNodeData = createData();
+    Data* newNodeData = NULL;
+    createData(&newNodeData);
     /* Remove player from old location and place player at new location */
     placeSym(tCoord, canvas, SPACE_SYM);
     placeSym(pCoord, canvas, PLAYER_SYM);

@@ -28,11 +28,9 @@ void charToInt(char** cArr, int* iArr, int* len)
 /**
  * @brief Dynamocly allocates memory to a new data struct 
  */
-Data* createData()
+void createData(Data** newData)
 {
-    Data* newData = (Data*)malloc(sizeof(Data));
-
-    return newData;
+    (*newData) = (Data*)malloc(sizeof(Data));
 }
 
 /**
@@ -42,11 +40,10 @@ Data* createData()
  */
 void freeData(void *data)
 {
-    Data* dataToFree = (Data*)data;
-    dataToFree->playerCoords[ROWS] = 0;
-    dataToFree->playerCoords[COLS] = 0;
-    dataToFree->floorCoords[ROWS] = 0;
-    dataToFree->floorCoords[COLS] = 0;
-    dataToFree = NULL;
-    free(dataToFree);
+    ((Data*)data)->playerCoords[ROWS] = 0;
+    ((Data*)data)->playerCoords[COLS] = 0;
+    ((Data*)data)->floorCoords[ROWS] = 0;
+    ((Data*)data)->floorCoords[COLS] = 0;
+    data = NULL;
+    free(((Data*)data));
 }
