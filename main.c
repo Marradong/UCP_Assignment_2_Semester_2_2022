@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
         char usrKey = ' ';
         FILE *inputFile = NULL;
 
-        LinkedList *gameList = createList();
+        LList *gameList = createList();
 
         initRandom();
-        if (!initCanvasFromFile(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, gameList))
+        if (!iCanv(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, gameList))
         {
 
             /* Game loop - continue asking player for moves until a win or lose condition is met */

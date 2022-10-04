@@ -17,8 +17,8 @@
 
 #include "LinkedList.h"
 
-int initCanvasFromFile(FILE** fInput, char*** canvas, char** argv, int* canvasSize, int* goalCoords, int* playerCoords, LinkedList* gameList);
-void printCanvas(int* canvasSize, char*** canvas, LinkedList* gameList);
+int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* pCoord, LList* gList);
+void printCanvas(int *cSize, char ***canvas, LList *gList);
 void placeSym(int* coords, char*** canvas, char sym);
 void freeCanvas(int* usrIns, char*** canvas);
 

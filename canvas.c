@@ -15,9 +15,9 @@
  * @brief Dynamicly allocates memory to a 2D array of characters (the canvas).
  *
  * @param canvasSize, array of integers containing the size of the canvas (int[])
- * @param canvas pointer to the game canvas (char***).
+ * @param canvas pointer to a 2d character array or 'game canvas' (char***).
  */
-void createCanvas(int *canvasSize, char ***canvas)
+static void createCanvas(int* canvasSize, char*** canvas)
 {
     int i;
     /* Establish number of rows and columns in the array given by the users command line input */
@@ -26,12 +26,12 @@ void createCanvas(int *canvasSize, char ***canvas)
     int cols = canvasSize[COLS] + 2;
 
     /* Dynamicly allocate memory the size of a char* to the rows of the array  */
-    (*canvas) = (char **)malloc(rows * sizeof(char *));
+    (*canvas) = (char**)malloc(rows*sizeof(char*));
 
     /* For each row dynamicly allocate memory the size of a char to the columns of the array */
     for (i = 0; i < rows; i++)
     {
-        (*canvas)[i] = (char *)malloc(cols * sizeof(char));
+        (*canvas)[i] = (char*)malloc(cols*sizeof(char));
 
         if (i == 0 || i == (rows - 1))
         {
@@ -49,22 +49,26 @@ void createCanvas(int *canvasSize, char ***canvas)
 }
 
 /**
- * @brief Initialises and prints the canvas along with player and goal.
+ * @brief Initialises canvas from input file and prints the canvas along with player and goal.
  *
- * @param fInput, pointer to pointer of the file entered by the user in the command line (FILE**)
+ * @param f, pointer to pointer of the file entered by the user in the command line (FILE**)
  * @param canvas, pointer to the game canvas (char***).
  * @param argv, pointer to array of characters entered by the user in the command line (char**)
- * @param canvasSize, array of integers containing the size of the canvas (int[])
- * @param goalCoords, array of integers containing the coordinates of the goal (int[])
- * @param playerCoords, array of integers containing the coordinates of the player (int[])
+ * @param cSize, array of integers containing the size of the canvas (int[])
+ * @param gCoords, array of integers containing the coordinates of the goal (int[])
+ * @param pCoords, array of integers containing the coordinates of the player (int[])
+ * @param gList, pointer to linked list containing the game data (LList*)
  */
-int initCanvasFromFile(FILE **fInput, char ***canvas, char **argv, int *canvasSize, int *goalCoords, int *playerCoords, LinkedList *gameList)
+int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* pCoord, LList* gList)
 {
+    /* create an integer that reflects if a file error occurs or not */
     int fileError = FALSE;
-    (*fInput) = fopen(argv[FILE_IDX], "r");
-
-    if ((*fInput) == NULL)
+    /* open the file with name specified by the command line args */
+    (*f) = fopen(argv[FILE_IDX], "r");
+    /* check if the file can be opened */
+    if ((*f) == NULL)
     {
+        /* Print error message if a file error occurs */
         perror("File Opening Error: Please check file name is correct and the file exist");
         fileError = TRUE;
     }
@@ -73,41 +77,44 @@ int initCanvasFromFile(FILE **fInput, char ***canvas, char **argv, int *canvasSi
         int coords[2];
         int numRead = 3;
         char cSymbol;
-
-        fscanf((*fInput), "%d %d", &canvasSize[ROWS], &canvasSize[COLS]);
-
-        createCanvas(canvasSize, canvas);
-
+        /* read the first line of the file in the form of 'number number\n' */
+        fscanf((*f), "%d %d", &cSize[ROWS], &cSize[COLS]);
+        /* create canvas of size read from file */
+        createCanvas(cSize, canvas);
+        /* continue reading lines in the form of 'number number char\n' until end is reached */
         while (numRead == 3)
         {
-            numRead = fscanf((*fInput), "%d %d %c", &coords[ROWS], &coords[COLS], &cSymbol);
-
+            /* read lines in the form of 'number number char\n' */
+            numRead = fscanf((*f), "%d %d %c", &coords[ROWS], &coords[COLS], &cSymbol);
+            /* check if char read is a player, goal or floor and ammend coords accordingly  */
             if (cSymbol == PLAYER_SYM)
             {
                 placeSym(coords, canvas, PLAYER_SYM);
-                playerCoords[ROWS] = coords[ROWS];
-                playerCoords[COLS] = coords[COLS];
+                pCoord[ROWS] = coords[ROWS];
+                pCoord[COLS] = coords[COLS];
             }
             else if (cSymbol == GOAL_SYM)
             {
                 placeSym(coords, canvas, GOAL_SYM);
-                goalCoords[ROWS] = coords[ROWS];
-                goalCoords[COLS] = coords[COLS];
+                gCoord[ROWS] = coords[ROWS];
+                gCoord[COLS] = coords[COLS];
             }
             else if (cSymbol == FLOOR_SYM)
             {
                 placeSym(coords, canvas, FLOOR_SYM);
             }
         }
-        printCanvas(canvasSize, canvas, gameList);
-
-        if (ferror((*fInput)))
+        /* print canvas to terminal */
+        printCanvas(cSize, canvas, gList);
+        /* check if an error occured while the file is opened */
+        if (ferror((*f)))
         {
+            /* Print error message if a file error occurs */
             perror("A File Closing Error Occured");
             fileError = TRUE;
         }
-
-        fclose((*fInput));
+        /* close the file */
+        fclose((*f));
     }
     return fileError;
 }
@@ -115,15 +122,16 @@ int initCanvasFromFile(FILE **fInput, char ***canvas, char **argv, int *canvasSi
 /**
  * @brief Prints the 2D array of characters (the canvas) to the cleared terminal.
  *
- * @param canvasSize, array of integers containing the size of the canvas (int[])
+ * @param cSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
+ * @param gList, pointer to linked list containing the game data (LList*)
  */
-void printCanvas(int *canvasSize, char ***canvas, LinkedList *gameList)
+void printCanvas(int *cSize, char ***canvas, LList *gList)
 {
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
-    int rows = canvasSize[ROWS] + 2;
-    int cols = canvasSize[COLS] + 2;
+    int rows = cSize[ROWS] + 2;
+    int cols = cSize[COLS] + 2;
     int i, j;
 
     /* clears all previous output on the terminal */
@@ -134,21 +142,26 @@ void printCanvas(int *canvasSize, char ***canvas, LinkedList *gameList)
     {
         for (j = 0; j < cols; j++)
         {
+            /* if char is a player set font colour to blue */
             if ((*canvas)[i][j] == PLAYER_SYM)
             {
                 setForeground("blue");
                 setBackground("reset");
             }
+            /* if char is a goal set font colour to green */
             else if ((*canvas)[i][j] == GOAL_SYM)
             {
                 setForeground("green");
                 setBackground("reset");
             }
-            else if (gameList->end != NULL && i == (((Data *)(gameList->end->data))->floorCoords[ROWS] + 1) && j == (((Data *)(gameList->end->data))->floorCoords[COLS] + 1))
+            /* if char is the last collapsed floor set background colour to red */
+            else if (gList->end != NULL && i == (((Data *)(gList->end->data))->floorCoords[ROWS]+1) 
+                    && j == (((Data *)(gList->end->data))->floorCoords[COLS] + 1))
             {
                 setForeground("white");
                 setBackground("red");
             }
+            /* otherwise reset colours */
             else
             {
                 setForeground("reset");
