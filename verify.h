@@ -13,6 +13,5 @@ int vMove(char* move);
 int vFloor(int* usrIns, int* coords, char*** canvas, int checkGoal);
 int vWin(int* goalCoords, int* playerCoords);
 int vLose(char*** canvas, int* coords, int* usrIns);
-int vFile(char** argv);
 
 #endif

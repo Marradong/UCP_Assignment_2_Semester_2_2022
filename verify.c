@@ -164,27 +164,3 @@ int vLose(char ***canvas, int *coords, int *canvasSize)
     /* return true or false based on condition being checked */
     return lose;
 }
-
-int vFile(char **argv)
-{
-    int verified = TRUE;
-    FILE *fInput = fopen(argv[FILE_IDX], "r");
-
-    system("clear");
-
-    if (fInput == NULL)
-    {
-        perror("File Opening Error: Please check file name is correct and the file exist");
-        verified = FALSE;
-    }
-    else
-    {
-        if (ferror(fInput))
-        {
-            perror("A File Closing Error Occured");
-            verified = FALSE;
-        }
-        fclose(fInput);
-    }
-    return verified;
-}
