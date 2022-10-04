@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
         LList *gameList = createList();
 
         initRandom();
-        if (!iCanv(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, gameList))
+        if (!iCanv(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, &gameList))
         {
 
             /* Game loop - continue asking player for moves until a win or lose condition is met */
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
                 readMove(&usrKey);
                 /* Move player */
                 /* determine player movement function based on borderless definition */
-                movePlayer(&canvas, &usrKey, playerCoords, canvasSize, gameList);
+                movePlayer(&canvas, &usrKey, playerCoords, canvasSize, &gameList);
 
                 /* Check if win or lose condition is met after player moves */
                 winStatus = vWin(goalCoords, playerCoords);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
             }
             /* Free game canvas memory */
             freeCanvas(canvasSize, &canvas);
-            freeList(gameList, &freeData);
+            freeList(&gameList, &freeData);
         }
     }
     return 0;

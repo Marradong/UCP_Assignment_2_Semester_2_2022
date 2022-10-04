@@ -11,7 +11,7 @@
 #include "LinkedList.h"
 
 void readMove(char* usrKey);
-void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LList* list);
+void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LList** list);
 void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
 
 #endif

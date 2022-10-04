@@ -115,7 +115,7 @@ static void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
  * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList *gList)
+static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList **gList)
 {
     /* create new node for linked list */
     Data* newNodeData = createData();
@@ -145,10 +145,10 @@ static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *
  * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList *gList)
+static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList **gList)
 {
     /* get the data from the last node of the linked list */
-    Data* data = ((Data*)(gList->end->data));
+    Data* data = ((Data*)((*gList)->end->data));
     /* assign the player location and collapsed floor location from the node to the arrays */
     pCoord[ROWS] = (int)data->playerCoords[ROWS];
     pCoord[COLS] = (int)data->playerCoords[COLS];
@@ -173,7 +173,7 @@ static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int 
  * @param canvasSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LList *gList)
+void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LList **gList)
 {
     /* Temporarily store player location in case of invalid move */
     int tempCoords[2], floorCoords[2], conditions;
@@ -212,7 +212,7 @@ void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LList *g
         break;
     case UNDO_KEY:
         /* check there are moves to undo */
-        if (gList->listLength != 0)
+        if ((*gList)->listLength != 0)
         {
            /* Move the player and remove the last node from a linked list */
             undoMove(canvas, pCoords, tempCoords, floorCoords, cSize, gList);

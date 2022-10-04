@@ -18,8 +18,8 @@ typedef struct LList
 } LList;
 
 LList* createList();
-void addEndNode(LList* currentList, void* nodeData);
-void removeEndNode(LList* curList, dataFunction fPtr);
-void freeList(LList* curList, dataFunction fPtr);
+void addEndNode(LList** currentList, void* nodeData);
+void removeEndNode(LList** curList, dataFunction fPtr);
+void freeList(LList** curList, dataFunction fPtr);
 
 #endif

@@ -59,7 +59,7 @@ static void createCanvas(int* canvasSize, char*** canvas)
  * @param pCoords, array of integers containing the coordinates of the player (int[])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* pCoord, LList* gList)
+int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* pCoord, LList** gList)
 {
     /* create an integer that reflects if a file error occurs or not */
     int fileError = FALSE;
@@ -126,7 +126,7 @@ int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* p
  * @param canvas pointer to the game canvas (char***).
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-void printCanvas(int *cSize, char ***canvas, LList *gList)
+void printCanvas(int *cSize, char ***canvas, LList** gList)
 {
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
@@ -155,8 +155,8 @@ void printCanvas(int *cSize, char ***canvas, LList *gList)
                 setBackground("reset");
             }
             /* if char is the last collapsed floor set background colour to red */
-            else if (gList->end != NULL && i == (((Data *)(gList->end->data))->floorCoords[ROWS]+1) 
-                    && j == (((Data *)(gList->end->data))->floorCoords[COLS] + 1))
+            else if ((*gList)->end != NULL && i == (((Data *)((*gList)->end->data))->floorCoords[ROWS]+1) 
+                    && j == (((Data *)((*gList)->end->data))->floorCoords[COLS] + 1))
             {
                 setForeground("white");
                 setBackground("red");

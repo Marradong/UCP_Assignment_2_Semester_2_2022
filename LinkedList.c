@@ -14,7 +14,7 @@ LList* createList()
     return newList;
 }
 
-void addEndNode(LList* curList, void* nodeData)
+void addEndNode(LList** curList, void* nodeData)
 {
     /* Dynamically allocate memory to LList */
     Node* newNode = (Node*)malloc(sizeof(Node));
@@ -23,55 +23,55 @@ void addEndNode(LList* curList, void* nodeData)
     /* Nullify node properties */
     newNode->next = NULL;
     /* check if an end node exists */
-    if (curList->end)
+    if ((*curList)->end)
     {
         /* point the end node to the new node */
-        curList->end->next = newNode;
+        (*curList)->end->next = newNode;
         /* point the new node to the end node */
-        newNode->previous = curList->end;
+        newNode->previous = (*curList)->end;
         /* point the end of the list to the new node */
-        curList->end = newNode;
+        (*curList)->end = newNode;
         
     }
     else
     {
         /* point the start of the list to the new node */
-        curList->start = newNode;
+        (*curList)->start = newNode;
         /* point the end of the list to the new node */
-        curList->end = newNode;
+        (*curList)->end = newNode;
         /* Nullify node properties */
         newNode->previous = NULL;
     }
     /* increase list length */
-    curList->listLength++;
+    (*curList)->listLength++;
 }
 
 
-void removeEndNode(LList* curList, dataFunction fPtr)
+void removeEndNode(LList** curList, dataFunction fPtr)
 {
     /* get the end node of the list */
-    Node* endNode = curList->end;
+    Node* endNode = (*curList)->end;
     /* check if the end node exists */
     if (endNode)
     {
         /* check if there is more than one node in the list */
-        if (curList->listLength > 1)
+        if ((*curList)->listLength > 1)
         {
             /* get the second last node of the list */
             Node* newEndNode = endNode->previous;
             /* Nullify second last node properties */
             newEndNode->next = NULL;
             /* point the end of the list to the second last node */
-            curList->end = newEndNode;
+            (*curList)->end = newEndNode;
         }
         else
         {
             /* Nullify list properties */
-            curList->start = NULL;
-            curList->end = NULL;
+            (*curList)->start = NULL;
+            (*curList)->end = NULL;
         }
         /* decrease list length */
-        curList->listLength--;
+        (*curList)->listLength--;
         /* Nullify and free node properties */
         endNode->next = NULL;
         endNode->previous = NULL;
@@ -82,10 +82,10 @@ void removeEndNode(LList* curList, dataFunction fPtr)
     }
 }
 
-void freeList(LList* curList, dataFunction fPtr)
+void freeList(LList** curList, dataFunction fPtr)
 {
     /* get the starting node of the list and create a temporary variable */
-    Node* curNode = curList->start;
+    Node* curNode = (*curList)->start;
 	Node* temp;
 	/* check curNode exists */
 	while (curNode)
@@ -103,9 +103,9 @@ void freeList(LList* curList, dataFunction fPtr)
 		curNode = temp;		
 	}	
     /* Nullify and free list properties */
-    curList->listLength = 0;
-    curList->end = NULL;
-    curList->start = NULL;
+    (*curList)->listLength = 0;
+    (*curList)->end = NULL;
+    (*curList)->start = NULL;
 	
-	free(curList);
+	free((*curList));
 }
