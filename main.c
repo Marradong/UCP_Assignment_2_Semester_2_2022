@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         char usrKey = ' ';
         FILE *inputFile = NULL;
 
-        LList *gameList = createList();
+        LinkedList *gameList = createList();
 
         initRandom();
         if (!iCanv(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, &gameList))

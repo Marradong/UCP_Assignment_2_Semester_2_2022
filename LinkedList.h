@@ -10,16 +10,16 @@ typedef struct Node
 	struct Node* previous;
 } Node;
 
-typedef struct LList
+typedef struct LinkedList
 {
 	int listLength;
     Node* start;
 	Node* end;
-} LList;
+} LinkedList;
 
-LList* createList();
-void addEndNode(LList** currentList, void* nodeData);
-void removeEndNode(LList** curList, dataFunction fPtr);
-void freeList(LList** curList, dataFunction fPtr);
+LinkedList* createList();
+void insertLast(LinkedList** currentList, void* nodeData);
+void removeLast(LinkedList** curList, dataFunction fPtr);
+void freeList(LinkedList** curList, dataFunction fPtr);
 
 #endif

@@ -44,6 +44,6 @@ void freeData(void *data)
     ((Data*)data)->playerCoords[COLS] = 0;
     ((Data*)data)->floorCoords[ROWS] = 0;
     ((Data*)data)->floorCoords[COLS] = 0;
-    data = NULL;
     free(((Data*)data));
+    data = NULL;
 }

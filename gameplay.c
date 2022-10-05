@@ -115,7 +115,7 @@ static void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
  * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList **gList)
+static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LinkedList **gList)
 {
     /* create new node for linked list */
     Data* newNodeData = NULL;
@@ -131,7 +131,7 @@ static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *
     newNodeData->floorCoords[ROWS] = fCoord[ROWS];
     newNodeData->floorCoords[COLS] = fCoord[COLS];
     /* add the node to the linked list */
-    addEndNode(gList, newNodeData);
+    insertLast(gList, newNodeData);
     /* reprint canvas after successful move */
     printCanvas(cSize, canvas, gList);
 }
@@ -146,7 +146,7 @@ static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *
  * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LList **gList)
+static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LinkedList **gList)
 {
     /* get the data from the last node of the linked list */
     Data* data = ((Data*)((*gList)->end->data));
@@ -156,7 +156,7 @@ static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int 
     fCoord[ROWS] = (int)data->floorCoords[ROWS];
     fCoord[COLS] = (int)data->floorCoords[COLS];
     /* remove the node from the linked list */
-    removeEndNode(gList, &freeData);
+    removeLast(gList, &freeData);
     /* Remove player from new location and place at old location then remove collapsed floor */
     placeSym(tCoord, canvas, SPACE_SYM);
     placeSym(pCoord, canvas, PLAYER_SYM);
@@ -174,7 +174,7 @@ static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int 
  * @param canvasSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LList **gList)
+void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LinkedList **gList)
 {
     /* Temporarily store player location in case of invalid move */
     int tempCoords[2], floorCoords[2], conditions;
