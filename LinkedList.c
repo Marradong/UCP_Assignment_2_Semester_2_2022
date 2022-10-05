@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "LinkedList.h"
 
-LinkedList* createList()
+LinkedList* createLinkedList()
 {
     /* Dynamically allocate memory to LList */
     LinkedList* newList = (LinkedList*)malloc(sizeof(LinkedList));
@@ -47,7 +47,7 @@ void insertLast(LinkedList** curList, void* nodeData)
 }
 
 
-void removeLast(LinkedList** curList, dataFunction fPtr)
+void removeLast(LinkedList** curList, listFunc fPtr)
 {
     /* get the end node of the list */
     Node* endNode = (*curList)->end;
@@ -82,7 +82,7 @@ void removeLast(LinkedList** curList, dataFunction fPtr)
     }
 }
 
-void freeList(LinkedList** curList, dataFunction fPtr)
+void freeLinkedList(LinkedList** curList, listFunc fPtr)
 {
     /* get the starting node of the list and create a temporary variable */
     Node* curNode = (*curList)->start;

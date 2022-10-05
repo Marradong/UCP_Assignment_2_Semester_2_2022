@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     if (vArgs(&argc))
     {
         /* initialise game variables */
+        GameObj gObj;
         int canvasSize[2], goalCoords[2], playerCoords[2];
         int winStatus = FALSE;
         int loseStatus = FALSE;
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
         char usrKey = ' ';
         FILE *inputFile = NULL;
 
-        LinkedList *gameList = createList();
+        LinkedList *gameList = createLinkedList();
 
         initRandom();
         if (!iCanv(&inputFile, &canvas, argv, canvasSize, goalCoords, playerCoords, &gameList))
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
             /* Free game canvas memory */
             freeCanvas(canvasSize, &canvas);
         }
-        freeList(&gameList, &freeData);
+        freeLinkedList(&gameList, &freeData);
     }
     return 0;
 }

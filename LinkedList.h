@@ -1,7 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-typedef void (*dataFunction)(void* data);
+typedef void (*listFunc)(void* data);
 
 typedef struct Node
 {
@@ -17,9 +17,9 @@ typedef struct LinkedList
 	Node* end;
 } LinkedList;
 
-LinkedList* createList();
+LinkedList* createLinkedList();
 void insertLast(LinkedList** currentList, void* nodeData);
-void removeLast(LinkedList** curList, dataFunction fPtr);
-void freeList(LinkedList** curList, dataFunction fPtr);
+void removeLast(LinkedList** curList, listFunc fPtr);
+void freeLinkedList(LinkedList** curList, listFunc fPtr);
 
 #endif
