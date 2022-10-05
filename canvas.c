@@ -6,6 +6,7 @@
 #include "toolbox.h"
 #include "color.h"
 #include "verify.h"
+#include "gameplay.h"
 
 /**************************************************************************************************/
 /* Canvas Initialisation, Display and Termination Methods                   	      		  	  */
@@ -17,13 +18,13 @@
  * @param canvasSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to a 2d character array or 'game canvas' (char***).
  */
-static void createCanvas(int* canvasSize, char*** canvas)
+static void createCanvas(GameObj* gObj, char*** canvas)
 {
     int i;
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
-    int rows = canvasSize[ROWS] + 2;
-    int cols = canvasSize[COLS] + 2;
+    int rows = gObj->canvasSize[ROWS] + 2;
+    int cols = gObj->canvasSize[COLS] + 2;
 
     /* Dynamicly allocate memory the size of a char* to the rows of the array  */
     (*canvas) = (char**)malloc(rows*sizeof(char*));
@@ -59,7 +60,7 @@ static void createCanvas(int* canvasSize, char*** canvas)
  * @param pCoords, array of integers containing the coordinates of the player (int[])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* pCoord, LinkedList** gList)
+int iCanv(FILE** f, char*** canvas, char** argv, GameObj* gObj, LinkedList** gList)
 {
     /* create an integer that reflects if a file error occurs or not */
     int fileError = FALSE;
@@ -78,9 +79,9 @@ int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* p
         int numRead = 3;
         char cSymbol;
         /* read the first line of the file in the form of 'number number\n' */
-        fscanf((*f), "%d %d", &cSize[ROWS], &cSize[COLS]);
+        fscanf((*f), "%d %d", &(gObj->canvasSize[ROWS]), &(gObj->canvasSize[COLS]));
         /* create canvas of size read from file */
-        createCanvas(cSize, canvas);
+        createCanvas(gObj, canvas);
         /* continue reading lines in the form of 'number number char\n' until end is reached */
         while (numRead == 3)
         {
@@ -90,14 +91,14 @@ int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* p
             if (cSymbol == PLAYER_SYM)
             {
                 placeSym(coords, canvas, PLAYER_SYM);
-                pCoord[ROWS] = coords[ROWS];
-                pCoord[COLS] = coords[COLS];
+                gObj->playerCoords[ROWS] = coords[ROWS];
+                gObj->playerCoords[COLS] = coords[COLS];
             }
             else if (cSymbol == GOAL_SYM)
             {
                 placeSym(coords, canvas, GOAL_SYM);
-                gCoord[ROWS] = coords[ROWS];
-                gCoord[COLS] = coords[COLS];
+                gObj->goalCoords[ROWS] = coords[ROWS];
+                gObj->goalCoords[COLS] = coords[COLS];
             }
             else if (cSymbol == FLOOR_SYM)
             {
@@ -105,7 +106,7 @@ int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* p
             }
         }
         /* print canvas to terminal */
-        printCanvas(cSize, canvas, gList);
+        printCanvas(gObj, canvas, gList);
         /* check if an error occured while the file is opened */
         if (ferror((*f)))
         {
@@ -126,12 +127,12 @@ int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* p
  * @param canvas pointer to the game canvas (char***).
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-void printCanvas(int *cSize, char ***canvas, LinkedList** gList)
+void printCanvas(GameObj* gObj, char ***canvas, LinkedList** gList)
 {
     /* Establish number of rows and columns in the array given by the users command line input */
     /* + 2 accounts for the rows and columns that make up the canvas border */
-    int rows = cSize[ROWS] + 2;
-    int cols = cSize[COLS] + 2;
+    int rows = gObj->canvasSize[ROWS] + 2;
+    int cols = gObj->canvasSize[COLS] + 2;
     int i, j;
 
     /* clears all previous output on the terminal */
@@ -199,11 +200,11 @@ void placeSym(int *coords, char ***canvas, char sym)
  * @param canvasSize the command line inputs of the user (int [6]).
  * @param canvas pointer to the game canvas (char***).
  */
-void freeCanvas(int *canvasSize, char ***canvas)
+void freeCanvas(GameObj* gObj, char*** canvas)
 {
     /* Establish number of rows in the array given by the users command line input */
     /* + 2 accounts for the rows that make up the canvas border */
-    int rows = canvasSize[ROWS] + 2;
+    int rows = gObj->canvasSize[ROWS] + 2;
     int i;
 
     for (i = 0; i < rows; i++)

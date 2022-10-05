@@ -16,10 +16,11 @@
 #define FLOOR_SYM 'X'
 
 #include "LinkedList.h"
+#include "gameplay.h"
 
-int iCanv(FILE** f, char*** canvas, char** argv, int* cSize, int* gCoord, int* pCoord, LinkedList** gList);
-void printCanvas(int *cSize, char ***canvas, LinkedList **gList);
+int iCanv(FILE** f, char*** canvas, char** argv, GameObj* gObj, LinkedList** gList);
+void printCanvas(GameObj* gObj, char ***canvas, LinkedList** gList);
 void placeSym(int* coords, char*** canvas, char sym);
-void freeCanvas(int* usrIns, char*** canvas);
+void freeCanvas(GameObj* gObj, char*** canvas);
 
 #endif

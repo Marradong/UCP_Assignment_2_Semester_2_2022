@@ -77,13 +77,13 @@ int vMove(char *move)
  * @param checkGoal, integer that confirms if the goal and player symbols should also be checked
  * 0 = false otherwise true (int).
  */
-int vFloor(int *canvasSize, int *coords, char ***canvas, int checkGoal)
+int vFloor(GameObj* gObj, int *coords, char ***canvas, int checkGoal)
 {
     int i, j;
     int verified = TRUE;
-    for (i = 0; i <= canvasSize[ROWS]; i++)
+    for (i = 0; i <= gObj->canvasSize[ROWS]; i++)
     {
-        for (j = 0; j <= canvasSize[COLS]; j++)
+        for (j = 0; j <= gObj->canvasSize[COLS]; j++)
         {
             /*Check if there is an collapsed floor at the given coordinates*/
             if ((*canvas)[i][j] == FLOOR_SYM && i == (coords[0] + 1) && j == (coords[1] + 1))
@@ -107,11 +107,11 @@ int vFloor(int *canvasSize, int *coords, char ***canvas, int checkGoal)
  * @param goalCoords, the coordinates of the goal (int [2])
  * @param playerCoords, the coordinates of the current player's position (int [2])
  */
-int vWin(int *goalCoords, int *playerCoords)
+int vWin(GameObj* gObj)
 {
     int won = FALSE;
     /*Check if the player coordinates are equal to the goal*/
-    if (playerCoords[0] == goalCoords[ROWS] && playerCoords[1] == goalCoords[COLS])
+    if (gObj->playerCoords[ROWS] == gObj->goalCoords[ROWS] && gObj->playerCoords[COLS] == gObj->goalCoords[COLS])
     {
         won = TRUE;
     }
@@ -126,7 +126,7 @@ int vWin(int *goalCoords, int *playerCoords)
  * @param coords, the coordinates being checked for surrounding collapsed floor characters (int [2])
  * @param canvasSize, the command line inputs of the user (int [6]).
  */
-int vLose(char ***canvas, int *coords, int *canvasSize)
+int vLose(char ***canvas, int *coords, GameObj* gObj)
 {
     int lose = FALSE;
     /* the starting position of the coordinates being checked */
@@ -147,8 +147,8 @@ int vLose(char ***canvas, int *coords, int *canvasSize)
         lose = TRUE;
     }
 #else
-    int maxRow = canvasSize[ROWS];
-    int maxCol = canvasSize[COLS];
+    int maxRow = gObj->canvasSize[ROWS];
+    int maxCol = gObj->canvasSize[COLS];
     /* check left, right, up and down around the coordinates for a collapsed floor or border */
     /* check 'across' the canvas if a border character is found */
     cUp = ((*canvas)[sRow - 1][sCol] == FLOOR_SYM) || (((*canvas)[sRow - 1][sCol] == BORDER_SYM) && ((*canvas)[maxRow][sCol] == FLOOR_SYM));

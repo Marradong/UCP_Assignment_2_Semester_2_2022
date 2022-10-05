@@ -6,12 +6,14 @@
 #define TRUE !FALSE
 #define NUM_ARGS 2
 
+#include "gameplay.h"
+
 int vStartLocation(int* coords);
 int vArgs(int* numArgs);
 int vCanvasSize(int* usrIns);
 int vMove(char* move);
-int vFloor(int* usrIns, int* coords, char*** canvas, int checkGoal);
-int vWin(int* goalCoords, int* playerCoords);
-int vLose(char*** canvas, int* coords, int* usrIns);
+int vFloor(GameObj* gObj, int *coords, char ***canvas, int checkGoal);
+int vWin(GameObj* gObj);
+int vLose(char*** canvas, int* coords, GameObj* gObj);
 
 #endif

@@ -12,13 +12,12 @@
 
 typedef struct GameObj
 {
-	int canvasSize[2]
-    int goalCoords[2] 
+	int canvasSize[2];
+    int goalCoords[2];
     int playerCoords[2];
 } GameObj;
 
 void readMove(char* usrKey);
-void movePlayer(char*** canvas, char* usrKey, int* playerCoords, int* canvasSize, LinkedList** list);
-void collapseFloor(int* canvasSize, char*** canvas, int* floorCoords);
+void movePlayer(char ***canvas, char *usrKey, GameObj* gObj, LinkedList **gList);
 
 #endif

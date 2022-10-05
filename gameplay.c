@@ -36,7 +36,7 @@ void readMove(char *usrKey)
  * @param cSize, array of integers containing the size of the canvas (int[])
  * @param canvas pointer to the game canvas (char***).
  */
-void collapseFloor(int *canvasSize, char ***canvas, int *floorCoords)
+static void collapseFloor(GameObj* gObj, char ***canvas, int *floorCoords)
 {
     int check = FALSE;
 
@@ -46,10 +46,10 @@ void collapseFloor(int *canvasSize, char ***canvas, int *floorCoords)
     {
         /* Randomly generate row INDEX between 0 and maximum rows-1 (as specified by user input) */
         /* -1 accounts for C indexing starting at 0 */
-        floorCoords[ROWS] = random(0, (canvasSize[ROWS] - 1));
-        floorCoords[COLS] = random(0, (canvasSize[COLS] - 1));
+        floorCoords[ROWS] = random(0, (gObj->canvasSize[ROWS] - 1));
+        floorCoords[COLS] = random(0, (gObj->canvasSize[COLS] - 1));
         /* checks location is not equal to the player, goal or any existing collapsed floors */
-        check = vFloor(canvasSize, floorCoords, canvas, TRUE);
+        check = vFloor(gObj, floorCoords, canvas, TRUE);
     }
     /* place collapsed floor symbol on canvas at generated location */
     placeSym(floorCoords, canvas, FLOOR_SYM);
@@ -62,22 +62,22 @@ void collapseFloor(int *canvasSize, char ***canvas, int *floorCoords)
  * @param canvasSize, array of integers containing the size of the canvas (int[2])
  * @param usrKey, pointer to the keyboard charater associated with the players next move (char*).
  */
-static void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
+static void changeCoords(GameObj* gObj, char *usrKey)
 {
     /* change the player coordinates based off user input key */
     switch ((*usrKey))
     {
     case UP_KEY:
-        playerCoords[ROWS] = playerCoords[ROWS] - 1;
+        gObj->playerCoords[ROWS] = gObj->playerCoords[ROWS] - 1;
         break;
     case DOWN_KEY:
-        playerCoords[ROWS] = playerCoords[ROWS] + 1;
+        gObj->playerCoords[ROWS] = gObj->playerCoords[ROWS] + 1;
         break;
     case LEFT_KEY:
-        playerCoords[COLS] = playerCoords[COLS] - 1;
+        gObj->playerCoords[COLS] = gObj->playerCoords[COLS] - 1;
         break;
     case RIGHT_KEY:
-        playerCoords[COLS] = playerCoords[COLS] + 1;
+        gObj->playerCoords[COLS] = gObj->playerCoords[COLS] + 1;
         break;
     default:
         break;
@@ -86,21 +86,21 @@ static void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
 #ifdef BORDERLESS
     /* check if the new player coordinates lie outside the canvas border and adjust the coordinates
     to wrap around to the otherside of the canvas if true*/
-    if (playerCoords[ROWS] > cSize[ROWS] - 1)
+    if (gObj->playerCoords[ROWS] > gObj->canvasSize[ROWS] - 1)
     {
-        playerCoords[ROWS] = 0;
+        gObj->playerCoords[ROWS] = 0;
     }
-    else if (playerCoords[ROWS] < 0)
+    else if (gObj->gObj->playerCoords[ROWS] < 0)
     {
         playerCoords[ROWS] = cSize[ROWS] - 1;
     }
-    else if (playerCoords[COLS] > cSize[COLS] - 1)
+    else if (gObj->playerCoords[COLS] > gObj->canvasSize[COLS] - 1)
     {
-        playerCoords[COLS] = 0;
+        gObj->playerCoords[COLS] = 0;
     }
-    else if (playerCoords[COLS] < 0)
+    else if (gObj->playerCoords[COLS] < 0)
     {
-        playerCoords[COLS] = cSize[COLS] - 1;
+        gObj->playerCoords[COLS] = gObj->canvasSize[COLS] - 1;
     }
 #endif
 }
@@ -115,16 +115,16 @@ static void changeCoords(int *playerCoords, int* canvasSize, char *usrKey)
  * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LinkedList **gList)
+static void pPlayer(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, LinkedList **gList)
 {
     /* create new node for linked list */
     Data* newNodeData = NULL;
     createData(&newNodeData);
     /* Remove player from old location and place player at new location */
     placeSym(tCoord, canvas, SPACE_SYM);
-    placeSym(pCoord, canvas, PLAYER_SYM);
+    placeSym(gObj->playerCoords, canvas, PLAYER_SYM);
     /* Generate collapsed floor */
-    collapseFloor(cSize, canvas, fCoord);
+    collapseFloor(gObj, canvas, fCoord);
     /* assign the old location and collapsed floor to the data */
     newNodeData->playerCoords[ROWS] = tCoord[ROWS];
     newNodeData->playerCoords[COLS] = tCoord[COLS];
@@ -133,7 +133,7 @@ static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *
     /* add the node to the linked list */
     insertLast(gList, newNodeData);
     /* reprint canvas after successful move */
-    printCanvas(cSize, canvas, gList);
+    printCanvas(gObj, canvas, gList);
 }
 
 /**
@@ -146,23 +146,23 @@ static void pPlayer(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *
  * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int *cSize, LinkedList **gList)
+static void undoMove(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, LinkedList **gList)
 {
     /* get the data from the last node of the linked list */
     Data* data = ((Data*)((*gList)->end->data));
     /* assign the player location and collapsed floor location from the node to the arrays */
-    pCoord[ROWS] = (int)data->playerCoords[ROWS];
-    pCoord[COLS] = (int)data->playerCoords[COLS];
+    gObj->playerCoords[ROWS] = (int)data->playerCoords[ROWS];
+    gObj->playerCoords[COLS] = (int)data->playerCoords[COLS];
     fCoord[ROWS] = (int)data->floorCoords[ROWS];
     fCoord[COLS] = (int)data->floorCoords[COLS];
     /* remove the node from the linked list */
     removeLast(gList, &freeData);
     /* Remove player from new location and place at old location then remove collapsed floor */
     placeSym(tCoord, canvas, SPACE_SYM);
-    placeSym(pCoord, canvas, PLAYER_SYM);
+    placeSym(gObj->playerCoords, canvas, PLAYER_SYM);
     placeSym(fCoord, canvas, SPACE_SYM);
     /* reprint canvas after every successful undo */
-    printCanvas(cSize, canvas, gList);
+    printCanvas(gObj, canvas, gList);
 }
 
 /**
@@ -174,12 +174,12 @@ static void undoMove(char ***canvas, int *pCoord, int *tCoord, int *fCoord, int 
  * @param canvasSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
-void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LinkedList **gList)
+void movePlayer(char ***canvas, char *usrKey, GameObj* gObj, LinkedList **gList)
 {
     /* Temporarily store player location in case of invalid move */
     int tempCoords[2], floorCoords[2], conditions;
-    tempCoords[ROWS] = pCoords[ROWS];
-    tempCoords[COLS] = pCoords[COLS];
+    tempCoords[ROWS] = gObj->playerCoords[ROWS];
+    tempCoords[COLS] = gObj->playerCoords[COLS];
     /* move player based on user input */
     switch ((*usrKey))
     {
@@ -188,27 +188,27 @@ void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LinkedLi
     case LEFT_KEY:
     case RIGHT_KEY:
         /* Change the player coordinates in the direction indicated by the user input character */
-        changeCoords(pCoords, cSize, usrKey);
+        changeCoords(gObj, usrKey);
 
         /* check the players new coordinates arent equal to a collapsed floor */
-        conditions = !vFloor(cSize, pCoords, canvas, FALSE);
+        conditions = !vFloor(gObj, gObj->playerCoords, canvas, FALSE);
         #ifndef BORDERLESS
             /* check if the new coordinates lie outside the canvas border */
             /* -1 accounts for C indexing starting at 0 */
-            conditions = conditions || (pCoords[ROWS] > cSize[ROWS] - 1) || (pCoords[ROWS] < 0) 
-            || (pCoords[COLS] > cSize[COLS] - 1) || (pCoords[COLS] < 0);
+            conditions = conditions || (gObj->playerCoords[ROWS] > gObj->canvasSize[ROWS] - 1) || (gObj->playerCoords[ROWS] < 0) 
+            || (gObj->playerCoords[COLS] > gObj->canvasSize[COLS] - 1) || (gObj->playerCoords[COLS] < 0);
         #endif
         
         if (conditions)
         {
             /* Invalid move, revert coordinates back to the original position */
-            pCoords[ROWS] = tempCoords[ROWS];
-            pCoords[COLS] = tempCoords[COLS];
+            gObj->playerCoords[ROWS] = tempCoords[ROWS];
+            gObj->playerCoords[COLS] = tempCoords[COLS];
         }
         else
         {
             /* Move the player and add the coordinates to a linked list */
-            pPlayer(canvas, pCoords, tempCoords, floorCoords, cSize, gList);
+            pPlayer(canvas, gObj, tempCoords, floorCoords, gList);
         }
         break;
     case UNDO_KEY:
@@ -216,7 +216,7 @@ void movePlayer(char ***canvas, char *usrKey, int *pCoords, int *cSize, LinkedLi
         if ((*gList)->listLength != 0)
         {
            /* Move the player and remove the last node from a linked list */
-            undoMove(canvas, pCoords, tempCoords, floorCoords, cSize, gList);
+            undoMove(canvas, gObj, tempCoords, floorCoords, gList);
         }
         break;
     default:
