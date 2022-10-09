@@ -1,8 +1,10 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
+/* type definition for function pointer */
 typedef void (*listFunc)(void* data);
 
+/* struct type definition for linked list node */
 typedef struct Node
 {
 	void* data;
@@ -10,6 +12,7 @@ typedef struct Node
 	struct Node* previous;
 } Node;
 
+/* struct type definition for linkedlist */
 typedef struct LinkedList
 {
 	int listLength;

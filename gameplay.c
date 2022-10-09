@@ -33,7 +33,7 @@ void readMove(char *usrKey)
 /**
  * @brief Randomly places a collapsed floor character on the canvas.
  *
- * @param cSize, array of integers containing the size of the canvas (int[])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param canvas pointer to the game canvas (char***).
  */
 static void collapseFloor(GameObj* gObj, char ***canvas, int *floorCoords)
@@ -58,8 +58,7 @@ static void collapseFloor(GameObj* gObj, char ***canvas, int *floorCoords)
 /**
  * @brief changes the player coordinates based off user input key (both with borders and borderless)
  *
- * @param playerCoords, current coordinates of the player on the canvas (int [2]).
- * @param canvasSize, array of integers containing the size of the canvas (int[2])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param usrKey, pointer to the keyboard charater associated with the players next move (char*).
  */
 static void changeCoords(GameObj* gObj, char *usrKey)
@@ -90,9 +89,9 @@ static void changeCoords(GameObj* gObj, char *usrKey)
     {
         gObj->playerCoords[ROWS] = 0;
     }
-    else if (gObj->gObj->playerCoords[ROWS] < 0)
+    else if (gObj->playerCoords[ROWS] < 0)
     {
-        playerCoords[ROWS] = cSize[ROWS] - 1;
+        gObj->playerCoords[ROWS] = gObj->canvasSize[ROWS] - 1;
     }
     else if (gObj->playerCoords[COLS] > gObj->canvasSize[COLS] - 1)
     {
@@ -109,10 +108,9 @@ static void changeCoords(GameObj* gObj, char *usrKey)
  * @brief Places the player and collapsed floor at new coordinates and adds these to the linked list
  *
  * @param canvas, pointer to the game canvas (char***).
- * @param pCoords, current coordinates of the player on the canvas (int [2]).
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param tCoords, old coordinates of the player on the canvas (int[2]).
  * @param fCoords, current coordinates of the new collapsed on the canvas (int[2]).
- * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
 static void pPlayer(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, LinkedList **gList)
@@ -128,8 +126,8 @@ static void pPlayer(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, Lin
     /* assign the old location and collapsed floor to the data */
     newNodeData->playerCoords[ROWS] = tCoord[ROWS];
     newNodeData->playerCoords[COLS] = tCoord[COLS];
-    newNodeData->floorCoords[ROWS] = fCoord[ROWS];
-    newNodeData->floorCoords[COLS] = fCoord[COLS];
+    newNodeData->fCoords[ROWS] = fCoord[ROWS];
+    newNodeData->fCoords[COLS] = fCoord[COLS];
     /* add the node to the linked list */
     insertLast(gList, newNodeData);
     /* reprint canvas after successful move */
@@ -140,10 +138,9 @@ static void pPlayer(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, Lin
  * @brief Moves the player to the previous position and removes the newest collapsed floor
  *
  * @param canvas, pointer to the game canvas (char***).
- * @param pCoords, current coordinates of the player on the canvas (int [2]).
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param tCoords, old coordinates of the player on the canvas (int[2]).
  * @param fCoords, current coordinates of the new collapsed on the canvas (int[2]).
- * @param cSize, array of integers containing the size of the canvas (int[2])
  * @param gList, pointer to linked list containing the game data (LList*)
  */
 static void undoMove(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, LinkedList **gList)
@@ -153,8 +150,8 @@ static void undoMove(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, Li
     /* assign the player location and collapsed floor location from the node to the arrays */
     gObj->playerCoords[ROWS] = (int)data->playerCoords[ROWS];
     gObj->playerCoords[COLS] = (int)data->playerCoords[COLS];
-    fCoord[ROWS] = (int)data->floorCoords[ROWS];
-    fCoord[COLS] = (int)data->floorCoords[COLS];
+    fCoord[ROWS] = (int)data->fCoords[ROWS];
+    fCoord[COLS] = (int)data->fCoords[COLS];
     /* remove the node from the linked list */
     removeLast(gList, &freeData);
     /* Remove player from new location and place at old location then remove collapsed floor */
@@ -170,8 +167,7 @@ static void undoMove(char ***canvas, GameObj* gObj, int *tCoord, int *fCoord, Li
  *
  * @param canvas, pointer to the game canvas (char***).
  * @param usrKey, pointer to the keyboard charater associated with the players next move (char*).
- * @param pCoords, current coordinates of the player on the canvas (int [2]).
- * @param canvasSize, array of integers containing the size of the canvas (int[2])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param gList, pointer to linked list containing the game data (LList*)
  */
 void movePlayer(char ***canvas, char *usrKey, GameObj* gObj, LinkedList **gList)

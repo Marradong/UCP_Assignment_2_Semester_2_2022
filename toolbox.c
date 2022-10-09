@@ -27,6 +27,8 @@ void charToInt(char** cArr, int* iArr, int* len)
 
 /**
  * @brief Dynamocly allocates memory to a new data struct 
+ * 
+ * @param newData, doupble pointer to game data
  */
 void createData(Data** newData)
 {
@@ -36,14 +38,16 @@ void createData(Data** newData)
 /**
  * @brief Frees memory of a data struct 
  * 
- * @param data, pointer to data struct
+ * @param data, void pointer to data struct
  */
 void freeData(void *data)
 {
+    /* set data to 0*/
     ((Data*)data)->playerCoords[ROWS] = 0;
     ((Data*)data)->playerCoords[COLS] = 0;
-    ((Data*)data)->floorCoords[ROWS] = 0;
-    ((Data*)data)->floorCoords[COLS] = 0;
+    ((Data*)data)->fCoords[ROWS] = 0;
+    ((Data*)data)->fCoords[COLS] = 0;
+    /* free data and nullify data */
     free(((Data*)data));
     data = NULL;
 }

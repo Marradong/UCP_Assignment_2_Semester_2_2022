@@ -6,11 +6,10 @@
 #define TRUE !FALSE
 #define NUM_ARGS 2
 
+/* include relevate files containing struct type definitions */
 #include "gameplay.h"
 
-int vStartLocation(int* coords);
 int vArgs(int* numArgs);
-int vCanvasSize(int* usrIns);
 int vMove(char* move);
 int vFloor(GameObj* gObj, int *coords, char ***canvas, int checkGoal);
 int vWin(GameObj* gObj);

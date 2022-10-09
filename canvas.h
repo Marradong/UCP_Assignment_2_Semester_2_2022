@@ -15,6 +15,7 @@
 #define GOAL_SYM 'G'
 #define FLOOR_SYM 'X'
 
+/* include relevate files containing struct type definitions */
 #include "LinkedList.h"
 #include "gameplay.h"
 

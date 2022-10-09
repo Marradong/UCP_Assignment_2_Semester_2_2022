@@ -8,8 +8,10 @@
 #define RIGHT_KEY 'd'
 #define UNDO_KEY 'u'
 
+/* include relevate files containing struct type definitions */
 #include "LinkedList.h"
 
+/* struct type definition for the game data */
 typedef struct GameObj
 {
 	int canvasSize[2];

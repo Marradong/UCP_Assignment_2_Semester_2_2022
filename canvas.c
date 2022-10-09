@@ -15,7 +15,7 @@
 /**
  * @brief Dynamicly allocates memory to a 2D array of characters (the canvas).
  *
- * @param canvasSize, array of integers containing the size of the canvas (int[])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param canvas pointer to a 2d character array or 'game canvas' (char***).
  */
 static void createCanvas(GameObj* gObj, char*** canvas)
@@ -55,9 +55,7 @@ static void createCanvas(GameObj* gObj, char*** canvas)
  * @param f, pointer to pointer of the file entered by the user in the command line (FILE**)
  * @param canvas, pointer to the game canvas (char***).
  * @param argv, pointer to array of characters entered by the user in the command line (char**)
- * @param cSize, array of integers containing the size of the canvas (int[])
- * @param gCoords, array of integers containing the coordinates of the goal (int[])
- * @param pCoords, array of integers containing the coordinates of the player (int[])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param gList, pointer to linked list containing the game data (LList*)
  */
 int iCanv(FILE** f, char*** canvas, char** argv, GameObj* gObj, LinkedList** gList)
@@ -123,7 +121,7 @@ int iCanv(FILE** f, char*** canvas, char** argv, GameObj* gObj, LinkedList** gLi
 /**
  * @brief Prints the 2D array of characters (the canvas) to the cleared terminal.
  *
- * @param cSize, array of integers containing the size of the canvas (int[])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param canvas pointer to the game canvas (char***).
  * @param gList, pointer to linked list containing the game data (LList*)
  */
@@ -156,8 +154,8 @@ void printCanvas(GameObj* gObj, char ***canvas, LinkedList** gList)
                 setBackground("reset");
             }
             /* if char is the last collapsed floor set background colour to red */
-            else if ((*gList)->end != NULL && i == (((Data *)((*gList)->end->data))->floorCoords[ROWS]+1) 
-                    && j == (((Data *)((*gList)->end->data))->floorCoords[COLS] + 1))
+            else if((*gList)->end != NULL && i == (((Data *)((*gList)->end->data))->fCoords[ROWS]+1) 
+                    && j == (((Data *)((*gList)->end->data))->fCoords[COLS] + 1))
             {
                 setForeground("white");
                 setBackground("red");
@@ -197,7 +195,7 @@ void placeSym(int *coords, char ***canvas, char sym)
 /**
  * @brief Frees the dynamicly allocated memory of a 2D array of characters (the canvas).
  *
- * @param canvasSize the command line inputs of the user (int [6]).
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  * @param canvas pointer to the game canvas (char***).
  */
 void freeCanvas(GameObj* gObj, char*** canvas)

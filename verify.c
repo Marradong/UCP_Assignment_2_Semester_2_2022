@@ -31,27 +31,6 @@ int vArgs(int *numArgs)
 }
 
 /**
- * @brief Verifies the size of the canvas specified by the user.
- *
- * @param canvasSize, array of integers containing the size of the canvas (int[])
- */
-int vCanvasSize(int *canvasSize)
-{
-    int verified = TRUE;
-    /* Check if the user specified size of the canvas is greater than the defined minimum */
-    if ((canvasSize[ROWS] < MAP_SIZE_MINIMUM) || (canvasSize[COLS] < MAP_SIZE_MINIMUM))
-    {
-        verified = FALSE;
-        /* Clear terminal and print error message */
-        system("clear");
-        printf("Invalid Map Size! Please ensure map size is greater than or equal to 5\n");
-        printf("./escape <row_map> <col_map> <row_player> <col_player> <row_goal> <col_goal>\n");
-    }
-    /* return true or false based on condition being checked */
-    return verified;
-}
-
-/**
  * @brief Verifies the move character specified by the user.
  *
  * @param move, the keyboard character entered by the user to move the player (char*).
@@ -104,8 +83,7 @@ int vFloor(GameObj* gObj, int *coords, char ***canvas, int checkGoal)
 /**
  * @brief Verifies the win condition.
  *
- * @param goalCoords, the coordinates of the goal (int [2])
- * @param playerCoords, the coordinates of the current player's position (int [2])
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  */
 int vWin(GameObj* gObj)
 {
@@ -124,7 +102,7 @@ int vWin(GameObj* gObj)
  *
  * @param canvas, pointer to the game canvas (char***).
  * @param coords, the coordinates being checked for surrounding collapsed floor characters (int [2])
- * @param canvasSize, the command line inputs of the user (int [6]).
+ * @param gObj, pointer to Struct containing game variables (GameObj*)
  */
 int vLose(char ***canvas, int *coords, GameObj* gObj)
 {
