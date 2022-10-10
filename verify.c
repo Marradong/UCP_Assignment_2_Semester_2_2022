@@ -39,9 +39,17 @@ int vMove(char *move)
 {
     int verified = FALSE;
     /*Check user enters a correct move key*/
-    if ((*move) == UP_KEY || (*move) == DOWN_KEY || (*move) == LEFT_KEY || (*move) == RIGHT_KEY || (*move) == UNDO_KEY)
+    switch ((*move))
     {
-        verified = TRUE;
+        case UP_KEY:
+        case DOWN_KEY:
+        case LEFT_KEY:
+        case RIGHT_KEY:
+        case UNDO_KEY:
+            verified = TRUE;
+            break;    
+        default:
+            break;
     }
     /* return true or false based on condition being checked */
     return verified;
@@ -70,7 +78,8 @@ int vFloor(GameObj* gObj, int *coords, char ***canvas, int checkGoal)
                 verified = FALSE;
             }
             /*Check if there is a player or goal at the given coordinates*/
-            if (checkGoal && ((*canvas)[i][j] == GOAL_SYM || (*canvas)[i][j] == PLAYER_SYM) && i == (coords[0] + 1) && j == (coords[1] + 1))
+            if (checkGoal && ((*canvas)[i][j] == GOAL_SYM || (*canvas)[i][j] == PLAYER_SYM) 
+            && i == (coords[0] + 1) && j == (coords[1] + 1))
             {
                 verified = FALSE;
             }
@@ -89,7 +98,8 @@ int vWin(GameObj* gObj)
 {
     int won = FALSE;
     /*Check if the player coordinates are equal to the goal*/
-    if (gObj->playerCoords[ROWS] == gObj->goalCoords[ROWS] && gObj->playerCoords[COLS] == gObj->goalCoords[COLS])
+    if (gObj->playerCoords[ROWS] == gObj->goalCoords[ROWS] 
+    && gObj->playerCoords[COLS] == gObj->goalCoords[COLS])
     {
         won = TRUE;
     }
@@ -129,10 +139,14 @@ int vLose(char ***canvas, int *coords, GameObj* gObj)
     int maxCol = gObj->canvasSize[COLS];
     /* check left, right, up and down around the coordinates for a collapsed floor or border */
     /* check 'across' the canvas if a border character is found */
-    cUp = ((*canvas)[sRow - 1][sCol] == FLOOR_SYM) || (((*canvas)[sRow - 1][sCol] == BORDER_SYM) && ((*canvas)[maxRow][sCol] == FLOOR_SYM));
-    cDown = ((*canvas)[sRow + 1][sCol] == FLOOR_SYM) || (((*canvas)[sRow + 1][sCol] == BORDER_SYM) && ((*canvas)[1][sCol] == FLOOR_SYM));
-    cLeft = ((*canvas)[sRow][sCol - 1] == FLOOR_SYM) || (((*canvas)[sRow][sCol - 1] == BORDER_SYM) && ((*canvas)[sRow][maxCol] == FLOOR_SYM));
-    cRight = ((*canvas)[sRow][sCol + 1] == FLOOR_SYM) || (((*canvas)[sRow][sCol + 1] == BORDER_SYM) && ((*canvas)[sRow][1] == FLOOR_SYM));
+    cUp = ((*canvas)[sRow - 1][sCol] == FLOOR_SYM) || (((*canvas)[sRow - 1][sCol] == BORDER_SYM) 
+        && ((*canvas)[maxRow][sCol] == FLOOR_SYM));
+    cDown = ((*canvas)[sRow + 1][sCol] == FLOOR_SYM) || (((*canvas)[sRow + 1][sCol] == BORDER_SYM) 
+        && ((*canvas)[1][sCol] == FLOOR_SYM));
+    cLeft = ((*canvas)[sRow][sCol - 1] == FLOOR_SYM) || (((*canvas)[sRow][sCol - 1] == BORDER_SYM) 
+        && ((*canvas)[sRow][maxCol] == FLOOR_SYM));
+    cRight = ((*canvas)[sRow][sCol + 1] == FLOOR_SYM) || (((*canvas)[sRow][sCol + 1] == BORDER_SYM) 
+        && ((*canvas)[sRow][1] == FLOOR_SYM));
     /* check if the coordinates are completely surrounded by collapsed floors */
     if (cLeft && cRight && cUp && cDown)
     {

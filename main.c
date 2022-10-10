@@ -41,7 +41,8 @@ int main(int argc, char *argv[])
 
                 /* Check if win or lose condition is met after player moves */
                 winStatus = vWin(&gObj);
-                loseStatus = (vLose(&canvas, gObj.playerCoords, &gObj) || vLose(&canvas, gObj.goalCoords, &gObj));
+                loseStatus = (vLose(&canvas, gObj.playerCoords, &gObj) 
+                || vLose(&canvas, gObj.goalCoords, &gObj));
             }
             /* Print end game message based on win or lose */
             if (winStatus)

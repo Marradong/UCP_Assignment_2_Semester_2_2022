@@ -191,8 +191,10 @@ void movePlayer(char ***canvas, char *usrKey, GameObj* gObj, LinkedList **gList)
         #ifndef BORDERLESS
             /* check if the new coordinates lie outside the canvas border */
             /* -1 accounts for C indexing starting at 0 */
-            conditions = conditions || (gObj->playerCoords[ROWS] > gObj->canvasSize[ROWS] - 1) || (gObj->playerCoords[ROWS] < 0) 
-            || (gObj->playerCoords[COLS] > gObj->canvasSize[COLS] - 1) || (gObj->playerCoords[COLS] < 0);
+            conditions = conditions || (gObj->playerCoords[ROWS] > gObj->canvasSize[ROWS] - 1) 
+            || (gObj->playerCoords[ROWS] < 0) 
+            || (gObj->playerCoords[COLS] > gObj->canvasSize[COLS] - 1) 
+            || (gObj->playerCoords[COLS] < 0);
         #endif
         
         if (conditions)
