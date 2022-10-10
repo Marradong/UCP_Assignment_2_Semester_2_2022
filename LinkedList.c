@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "LinkedList.h"
 
+/**
+ * @brief Creates a Linked List.
+ */
 LinkedList* createLinkedList()
 {
     /* Dynamically allocate memory to LList */
@@ -14,6 +17,12 @@ LinkedList* createLinkedList()
     return newList;
 }
 
+/**
+ * @brief Inserts a node to the end of a linked list
+ * 
+ * @param curList, the Linked Game List
+ * @param nodeData, pointer to the data stored in the new node
+ */
 void insertLast(LinkedList** curList, void* nodeData)
 {
     /* Dynamically allocate memory to LList */
@@ -46,7 +55,12 @@ void insertLast(LinkedList** curList, void* nodeData)
     (*curList)->listLength++;
 }
 
-
+/**
+ * @brief Removes a node from the end of a linked list
+ * 
+ * @param curList, the Linked Game List
+ * @param fPtr, pointer to the function that frees the data stored in the node
+ */
 void removeLast(LinkedList** curList, listFunc fPtr)
 {
     /* get the end node of the list */
@@ -82,6 +96,12 @@ void removeLast(LinkedList** curList, listFunc fPtr)
     }
 }
 
+/**
+ * @brief Inserts a node to the end of a linked list
+ * 
+ * @param curList, the Linked Game List
+ * @param fPtr, pointer to the function that frees the data stored in the nodes
+ */
 void freeLinkedList(LinkedList** curList, listFunc fPtr)
 {
     /* get the starting node of the list and create a temporary variable */
