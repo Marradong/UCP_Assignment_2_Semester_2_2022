@@ -14,7 +14,7 @@ $(EXEC) : $(OBJ)
 main.o : main.c canvas.h toolbox.h verify.h gameplay.h random.h LinkedList.h
 	$(CC) -c main.c $(CFLAGS)
 
-canvas.o : canvas.c canvas.h LinkedList.h toolbox.h
+canvas.o : canvas.c canvas.h LinkedList.h toolbox.h color.h verify.h gameplay.h
 	$(CC) -c canvas.c $(CFLAGS)
 
 toolbox.o : toolbox.c toolbox.h canvas.h
@@ -23,7 +23,7 @@ toolbox.o : toolbox.c toolbox.h canvas.h
 verify.o : verify.c verify.h gameplay.h canvas.h toolbox.h
 	$(CC) -c verify.c $(CFLAGS)
 
-gameplay.o : gameplay.c LinkedList.h gameplay.h terminal.h verify.h canvas.h random.h toolbox.h
+gameplay.o : gameplay.c gameplay.h terminal.h verify.h canvas.h random.h toolbox.h LinkedList.h
 	$(CC) -c gameplay.c $(CFLAGS)
 
 terminal.o : terminal.c terminal.h

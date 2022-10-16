@@ -2,7 +2,8 @@
 #include<time.h>
 #include"random.h"
 
-/*call this function just ONCE at the beginning of your program before using the random number generator */
+/*call this function just ONCE at the beginning of your program before 
+using the random number generator */
 void initRandom()
 {
     srand(time(NULL));
